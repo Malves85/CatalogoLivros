@@ -1,3 +1,6 @@
+using CatalogoLivros.Context;
+using CatalogoLivros.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +10,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IBookService, BooksService>();
+builder.Services.AddDbContext<AppDbContext>();
+
+
 var app = builder.Build();
+
+app.UseCors(options =>
+{
+    options.WithOrigins("http://localhost:3000");
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

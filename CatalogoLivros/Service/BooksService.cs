@@ -1,0 +1,69 @@
+﻿using CatalogoLivros.Context;
+using CatalogoLivros.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace CatalogoLivros.Service
+{
+    public class BooksService : IBookService
+    {
+        private readonly AppDbContext _context;
+
+        public BooksService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Book>> GetBooks()
+        {
+            try
+            {
+                return await _context.Books.ToListAsync();
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+        public async Task<IEnumerable<Book>> GetBookByTitle(string title)
+        {
+            IEnumerable<Book> books;
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                books = await _context.Books.Where(n => n.Title.Contains(title)).ToListAsync();
+            }
+            else
+            {
+                books = await GetBooks();
+            }
+            return books;
+        }
+
+        public async Task<Book> GetBookById(int id)
+        {
+            var book = await _context.Books.FindAsync(id);
+            return book;
+
+        }
+
+        public async Task CreateBook(Book book)
+        {
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task UpdateBook(Book book)
+        {
+            _context.Entry(book).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task DeleteBookById(Book book)
+        {
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+        }
+    }
+}
