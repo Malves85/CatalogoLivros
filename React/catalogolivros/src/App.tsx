@@ -131,7 +131,7 @@ function App() {
         </thead>
         <tbody>
           {data.map((book: { id: number; isbn: number; title: string; author: string; price : number; }) => (
-            <tr >
+            <tr key={book.id}>
               <td>{book.id}</td>
               <td>{book.isbn}</td>
               <td>{book.title}</td>
@@ -258,7 +258,7 @@ function App() {
             <input
               type="text"
               className="form-control"
-              name="price"
+              name="price "
               onChange={handleChange}
               value={bookSelected && bookSelected.price}
             />
