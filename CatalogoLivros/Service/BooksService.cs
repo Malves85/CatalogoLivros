@@ -1,5 +1,6 @@
 ﻿using CatalogoLivros.Context;
 using CatalogoLivros.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoLivros.Service
@@ -16,8 +17,11 @@ namespace CatalogoLivros.Service
         public async Task<IEnumerable<Book>> GetBooks()
         {
             try
-            {
-                return await _context.Books.ToListAsync();
+            {   // retorna os livros ordenados por título
+                return await _context.Books.OrderBy(t => t.Title).ToListAsync();
+
+                // retorna os livros ordenados por id
+                //return await _context.Books.ToListAsync();
             }
             catch
             {
@@ -45,12 +49,19 @@ namespace CatalogoLivros.Service
             return book;
 
         }
+        public async Task<IEnumerable<Book>> InsertBook(long isbn)
+        {
+            IEnumerable<Book> books;
+            books = (IEnumerable<Book>)await _context.Books.FindAsync(isbn);
+            return books;
+
+        }
 
         public async Task CreateBook(Book book)
         {
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+                       
         }
 
         public async Task UpdateBook(Book book)
