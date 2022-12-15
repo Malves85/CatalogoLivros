@@ -2,6 +2,9 @@
 using CatalogoLivros.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CatalogoLivros.Controllers
 {
@@ -75,8 +78,28 @@ namespace CatalogoLivros.Controllers
         {
             try
             {
-                await _bookService.CreateBook(book);
-                return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
+                if (book.Price > 0)
+                {
+                    await _bookService.CreateBook(book);
+                    return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
+
+                    /*var isbn = _bookService.InsertBook(book.Isbn).ToString();
+                    if (isbn.Any() != true)
+                    {
+                        await _bookService.CreateBook(book);
+                        return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
+                    }
+                    else
+                    {
+                         return BadRequest("Isbn já existe");
+                    }*/
+                    
+                }
+                else
+                {
+                    return BadRequest("price incorreto");
+                }
+                
             }
             catch
             {
