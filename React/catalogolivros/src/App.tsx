@@ -1,5 +1,4 @@
 import Main from "./Main";
-import { Routes, Route } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
@@ -38,8 +37,6 @@ export default function App() {
           </div>
         </div>
       </nav>
-
-      <hr />
       <Main />
     </div>
   );
