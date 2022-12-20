@@ -1,6 +1,5 @@
 ﻿using CatalogoLivros.Context;
 using CatalogoLivros.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoLivros.Service
@@ -59,7 +58,8 @@ namespace CatalogoLivros.Service
 
         public async Task CreateBook(Book book)
         {
-                _context.Books.Add(book);
+             
+            _context.Books.Add(book);
                 await _context.SaveChangesAsync();
                        
         }
@@ -73,7 +73,7 @@ namespace CatalogoLivros.Service
 
         public async Task DeleteBookById(Book book)
         {
-            _context.Books.Remove(book);
+            _context.Entry(book).CurrentValues["isDeleted"] = true;
             await _context.SaveChangesAsync();
         }
     }
