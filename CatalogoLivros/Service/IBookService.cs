@@ -4,7 +4,8 @@ namespace CatalogoLivros.Service
 {
     public interface IBookService
     {
-        Task<IEnumerable<Book>> GetBooks();
+        //Task<IEnumerable<Book>> GetBooks();
+        IEnumerable<Book> GetBooks(BooksParameters booksParameters);
         Task<Book> GetBookById(int id);
         Task<IEnumerable<Book>> InsertBook(long isbn);
         Task<IEnumerable<Book>> GetBookByTitle(string title);

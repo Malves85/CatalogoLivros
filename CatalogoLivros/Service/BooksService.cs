@@ -13,7 +13,20 @@ namespace CatalogoLivros.Service
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetBooks()
+        public IEnumerable<Book> GetBooks(BooksParameters booksParameters)
+        {
+            return FindAll()
+                .OrderBy(on => on.Title)
+                .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+                .Take(booksParameters.PageSize)
+                .ToList();
+        }
+        public IQueryable<Book> FindAll()
+        {
+            return this._context.Set<Book>();
+        }
+
+        /*public async Task<IEnumerable<Book>> GetBooks()
         {
             try
             {   // retorna os livros ordenados por título
@@ -27,7 +40,7 @@ namespace CatalogoLivros.Service
                 throw;
             }
 
-        }
+        }*/
         public async Task<IEnumerable<Book>> GetBookByTitle(string title)
         {
             IEnumerable<Book> books;
@@ -37,7 +50,9 @@ namespace CatalogoLivros.Service
             }
             else
             {
-                books = await GetBooks();
+                books = await _context.Books.ToListAsync();
+                //books = await _context.Books.Where(n => n.Title.Contains(title)).ToListAsync();
+                //books = await GetBooks();
             }
             return books;
         }
