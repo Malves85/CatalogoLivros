@@ -18,7 +18,22 @@ namespace CatalogoLivros.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<IAsyncEnumerable<Book>>> GetBooks()
+        public IActionResult GetBooks([FromQuery] BooksParameters booksParameters)
+        {
+            try
+            {
+                var books = _bookService.GetBooks(booksParameters);
+                return Ok(books);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao obter livros");
+
+
+            }
+        }
+
+        /*public async Task<ActionResult<IAsyncEnumerable<Book>>> GetBooks()
         {
             try
             {
@@ -30,7 +45,7 @@ namespace CatalogoLivros.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Erro ao obter livros");
             }
-        }
+        }*/
 
         [HttpGet("ByTitle")]
 

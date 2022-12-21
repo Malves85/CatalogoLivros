@@ -6,17 +6,22 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import ReactPaginate from "react-paginate";
 
 export default function Books() {
-  const baseUrl = "https://localhost:7043/api/Books";
 
+  const baseUrl = "https://localhost:7043/api/Books";
   const [data, setData] = useState([]);
+  const [updateData, setUpdateData] = useState(true);
   const [modalIncluir, setModalIncluir] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalExcluir, setModalExcluir] = useState(false);
   //filtrar dados
-  const [searchInput,setSearchInput]  = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [filtro, setFiltro] = useState([]);
+  //paginação
+  const [pageCount, setPageCount] = useState(0);
+  const pageSize = 6;
 
   const [bookSelected, setbookSelected] = useState({
     id: "",
@@ -26,21 +31,20 @@ export default function Books() {
     price: "",
   });
 
-  const searchBooks = (searchValue : string) => {
+  const searchBooks = (searchValue: string) => {
     setSearchInput(searchValue);
-    if (searchInput !== '') {
-        const dadosFiltrados = data.filter((item) => {
-            return Object.values(item).join('').toLowerCase()
-            .includes(searchInput.toLowerCase())
-        });
-        setFiltro(dadosFiltrados);
+    if (searchInput !== "") {
+      const dadosFiltrados = data.filter((item) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(searchInput.toLowerCase());
+      });
+      setFiltro(dadosFiltrados);
+    } else {
+      setFiltro(data);
     }
-    else{
-        setFiltro(data);
-    }
-  }
-
-
+  };
 
   const selectBook = (book: any, opcao: string) => {
     setbookSelected(book);
@@ -67,8 +71,13 @@ export default function Books() {
   };
 
   const pedidoGet = async () => {
+    const res = await (await axios.get(baseUrl)).data;
+        const total = res.length;
+        setPageCount(total/pageSize);
+      console.log(total);
+
     await axios
-      .get(baseUrl)
+      .get(baseUrl+"?PageNumber=1&PageSize="+pageSize)
       .then((response) => {
         setData(response.data);
       })
@@ -83,6 +92,7 @@ export default function Books() {
       .post(baseUrl, bookSelected)
       .then((response) => {
         setData(data.concat(response.data));
+        setUpdateData(true);
         abrirFecharModalIncluir();
       })
       .catch((error) => {
@@ -112,6 +122,7 @@ export default function Books() {
             }
           }
         );
+        setUpdateData(true);
         abrirFecharModalEditar();
       })
       .catch((error) => {
@@ -124,149 +135,105 @@ export default function Books() {
       .delete(baseUrl + "/" + bookSelected.id)
       .then((response) => {
         setData(data.filter((book) => book !== response.data));
+        setUpdateData(true);
         abrirFecharModalExcluir();
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
+  //Atualiza os dados
   useEffect(() => {
-    pedidoGet();
-  });
+    if (updateData) {
+      pedidoGet();
+      setUpdateData(false);
+    }
+    
+  },[updateData]);
+  //end
+  // Paginação
+  const fetchBooks = async (currentPage: number) => {
+    const res = await fetch(baseUrl+'?PageNumber='+currentPage+'&PageSize='+pageSize);
+    const temp = res.json();
+    return temp;
+  }; 
+console.log(data);
+
+  const handlePageClick = async (data:any)=>{
+    console.log(data.selected+1);
+    let currentPage = data.selected +1
+    const booksFormServer = await fetchBooks(currentPage);
+    setData (booksFormServer); 
+  }
+  // end
   return (
     <div className="Book-container">
-
-        <form className="d-flex" role="search">
-            <input
-            className="form-control me-2 bg-light"
-            type="search"
-            placeholder="Search by title"
-            aria-label="Search"
-            onChange={(e) => searchBooks(e.target.value)}
-            />
-        </form>
-        <button
-          className="btn btn-success md-2"
-          onClick={() => abrirFecharModalIncluir()}
-        >
-          Incluir novo Livro
-        </button>
+      <form className="d-flex" role="search">
+        <input
+          className="form-control me-2 bg-light"
+          type="search"
+          placeholder="Search by title"
+          aria-label="Search"
+          onChange={(e) => searchBooks(e.target.value)}
+        />
+      </form>
+      <button
+        className="btn btn-success md-2"
+        onClick={() => abrirFecharModalIncluir()}
+      >
+        Incluir novo Livro
+      </button>
 
       {searchInput.length > 1 ? (
-        <Row xs={2|1} md={3} className="g-1">
-        {filtro.map(
-          (book: {
-            id: number;
-            isbn: number;
-            title: string;
-            author: string;
-            price: number;
-          }) => (
-            <Col>
-              <Card border="primary" bg="light">
-                <Card.Body>
-                  <Card.Title>Book</Card.Title>
-                  <Card.Text>
-                    <p key={book.id}>
-                      <b>Isbn </b>
-                      {book.isbn}
-                      <br></br>
-                      <b>Title </b>
-                      {book.title}
-                      <br></br>
-                      <b>Author </b>
-                      {book.author}
-                      <br></br>
-                      <b>Price </b>
-                      {book.price}
-                      <br></br>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => selectBook(book, "Editar")}
-                      >
-                        Editar
-                      </button>{" "}
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => selectBook(book, "Excluir")}
-                      >
-                        Excluir
-                      </button>
-                    </p>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          )
-        )}
-      </Row>
-               
-              ) : (
-                <Row xs={2|1} md={3} className="g-1">
-        {data.map(
-          (book: {
-            id: number;
-            isbn: number;
-            title: string;
-            author: string;
-            price: number;
-          }) => (
-            <Col>
-              <Card border="primary" bg="light">
-                <Card.Body>
-                  <Card.Title>Book</Card.Title>
-                  <Card.Text>
-                    <p key={book.id}>
-                      <b>Isbn </b>
-                      {book.isbn}
-                      <br></br>
-                      <b>Title </b>
-                      {book.title}
-                      <br></br>
-                      <b>Author </b>
-                      {book.author}
-                      <br></br>
-                      <b>Price </b>
-                      {book.price}
-                      <br></br>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => selectBook(book, "Editar")}
-                      >
-                        Editar
-                      </button>{" "}
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => selectBook(book, "Excluir")}
-                      >
-                        Excluir
-                      </button>
-                    </p>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          )
-        )}
-      </Row>
-            
-           )}
-
-
-      {/* 
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Isbn</th>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Price</th>
-            <th scope="col">Operação</th>
-          </tr>
-        </thead>
-        <tbody>
+        <Row xs={2 | 1} md={3} className="g-1">
+          {filtro.map(
+            (book: {
+              id: number;
+              isbn: number;
+              title: string;
+              author: string;
+              price: number;
+            }) => (
+              <Col>
+                <Card border="primary" bg="light">
+                  <Card.Body>
+                    <Card.Title>Book</Card.Title>
+                    <Card.Text>
+                      <p key={book.id}>
+                        <b>Isbn </b>
+                        {book.isbn}
+                        <br></br>
+                        <b>Title </b>
+                        {book.title}
+                        <br></br>
+                        <b>Author </b>
+                        {book.author}
+                        <br></br>
+                        <b>Price </b>
+                        {book.price}
+                        <br></br>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => selectBook(book, "Editar")}
+                        >
+                          Editar
+                        </button>{" "}
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => selectBook(book, "Excluir")}
+                        >
+                          Excluir
+                        </button>
+                      </p>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            )
+          )}
+        </Row>
+      ) : (
+        <Row xs={2 | 1} md={3} className="g-1">
           {data.map(
             (book: {
               id: number;
@@ -275,32 +242,65 @@ export default function Books() {
               author: string;
               price: number;
             }) => (
-              <tr key={book.id}>
-                <td>{book.id}</td>
-                <td>{book.isbn}</td>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td>{book.price}</td>
-                <td>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => selectBook(book, "Editar")}
-                  >
-                    Editar
-                  </button>{" "}
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => selectBook(book, "Excluir")}
-                  >
-                    Excluir
-                  </button>
-                </td>
-              </tr>
+              <Col>
+                <Card border="primary" bg="light">
+                  <Card.Body>
+                    <Card.Title>Book</Card.Title>
+                    <Card.Text>
+                      <p key={book.id}>
+                        <b>Isbn </b>
+                        {book.isbn}
+                        <br></br>
+                        <b>Title </b>
+                        {book.title}
+                        <br></br>
+                        <b>Author </b>
+                        {book.author}
+                        <br></br>
+                        <b>Price </b>
+                        {book.price}
+                        <br></br>
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => selectBook(book, "Editar")}
+                        >
+                          Editar
+                        </button>{" "}
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => selectBook(book, "Excluir")}
+                        >
+                          Excluir
+                        </button>
+                      </p>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             )
           )}
-        </tbody>
-      </table>
-       */}
+        </Row>
+      )}
+
+<ReactPaginate 
+        previousLabel={'previous'}
+        nextLabel={'next'}
+        breakLabel={'...'} 
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={3}
+        onPageChange={handlePageClick}
+        containerClassName={'pagination justify-content-center'}
+        pageClassName={'page-item'}
+        pageLinkClassName={'page-link'}
+        previousClassName={'page-item'}
+        previousLinkClassName={'page-link'}
+        nextClassName={'page-item'}
+        nextLinkClassName={'page-link'}
+        breakClassName={'page-item'}
+        breakLinkClassName={'page-link'}
+        activeClassName={'active'}
+  />
 
       {/* Modal incluir alunos */}
       <Modal isOpen={modalIncluir}>
