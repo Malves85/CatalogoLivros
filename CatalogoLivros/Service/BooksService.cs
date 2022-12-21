@@ -1,6 +1,7 @@
 ﻿using CatalogoLivros.Context;
 using CatalogoLivros.Models;
 using Microsoft.EntityFrameworkCore;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace CatalogoLivros.Service
 {
@@ -41,12 +42,15 @@ namespace CatalogoLivros.Service
             }
 
         }*/
-        public async Task<IEnumerable<Book>> GetBookByTitle(string title)
+
+        public async Task<IEnumerable<Book>> searchBook(string item)
         {
             IEnumerable<Book> books;
-            if (!string.IsNullOrWhiteSpace(title))
+            if (!string.IsNullOrWhiteSpace(item) && item.Count() > 1)
             {
-                books = await _context.Books.Where(n => n.Title.Contains(title)).ToListAsync();
+                item = item.ToLower();
+                books = await _context.Books.Where(n => n.Title.Contains(item) || n.Isbn.ToString().Contains(item) || n.Author.Contains(item) || n.Price.ToString().Contains(item)).ToListAsync();
+                //books = await _context.Books.Where(n => n.Title.Contains(item)).ToListAsync();
             }
             else
             {
@@ -63,11 +67,11 @@ namespace CatalogoLivros.Service
             return book;
 
         }
-        public async Task<IEnumerable<Book>> InsertBook(long isbn)
+        public async Task<Book> InsertBook(long isbn)
         {
-            IEnumerable<Book> books;
-            books = (IEnumerable<Book>)await _context.Books.FindAsync(isbn);
-            return books;
+            
+            var book = await _context.Books.FindAsync(isbn);
+            return book;
 
         }
 

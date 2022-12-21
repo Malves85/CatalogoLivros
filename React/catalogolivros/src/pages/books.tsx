@@ -72,8 +72,8 @@ export default function Books() {
 
   const pedidoGet = async () => {
     const res = await (await axios.get(baseUrl)).data;
-        const total = res.length;
-        setPageCount(total/pageSize);
+        const total:number = res.length;
+        setPageCount(Math.ceil((total/pageSize)+1));
       console.log(total);
 
     await axios
@@ -150,7 +150,6 @@ export default function Books() {
     }
     
   },[updateData]);
-  //end
   // Paginação
   const fetchBooks = async (currentPage: number) => {
     const res = await fetch(baseUrl+'?PageNumber='+currentPage+'&PageSize='+pageSize);

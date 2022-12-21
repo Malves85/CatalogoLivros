@@ -7,8 +7,8 @@ namespace CatalogoLivros.Service
         //Task<IEnumerable<Book>> GetBooks();
         IEnumerable<Book> GetBooks(BooksParameters booksParameters);
         Task<Book> GetBookById(int id);
-        Task<IEnumerable<Book>> InsertBook(long isbn);
-        Task<IEnumerable<Book>> GetBookByTitle(string title);
+        Task<Book> InsertBook(long isbn);
+        Task<IEnumerable<Book>> searchBook(string item);
         Task CreateBook(Book book);
         Task UpdateBook(Book book);
         Task DeleteBookById(Book book);
