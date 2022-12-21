@@ -47,16 +47,16 @@ namespace CatalogoLivros.Controllers
             }
         }*/
 
-        [HttpGet("ByTitle")]
+        [HttpGet("searchBook")]
 
         public async Task<ActionResult<IAsyncEnumerable<Book>>>
-            GetBookByTitle([FromQuery] string title)
+            searchBook([FromQuery] string item)
         {
             try
             {
-                var books = await _bookService.GetBookByTitle(title);
+                var books = await _bookService.searchBook(item);
                 if (books.Count() == 0)
-                    return NotFound($"Não existem livros com o critério {title}");
+                    return NotFound($"Não existem livros com o critério {item}");
 
                 return Ok(books);
             }
