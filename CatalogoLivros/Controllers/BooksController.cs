@@ -50,15 +50,20 @@ namespace CatalogoLivros.Controllers
         [HttpGet("searchBook")]
 
         public async Task<ActionResult<IAsyncEnumerable<Book>>>
-            searchBook([FromQuery] string item)
+            searchBook([FromQuery] BooksParameters booksParameters, string item)
         {
             try
-            {
-                var books = await _bookService.searchBook(item);
-                if (books.Count() == 0)
-                    return NotFound($"Não existem livros com o critério {item}");
+            {   if (item.Count() > 1)
+                {
+                    var books = await _bookService.searchBook(booksParameters, item);
+                    return Ok(books);
+                }
+                else
+                {
+                    return NotFound($"é preciso colocar mais de 1 carater");
+                    //return NotFound($"Não existem livros com o critério {item}");
+                }
 
-                return Ok(books);
             }
             catch
             {

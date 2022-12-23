@@ -43,22 +43,16 @@ namespace CatalogoLivros.Service
 
         }*/
 
-        public async Task<IEnumerable<Book>> searchBook(string item)
+        public async Task<IEnumerable<Book>> searchBook(BooksParameters booksParameters, string item)
         {
             IEnumerable<Book> books;
-            if (!string.IsNullOrWhiteSpace(item) && item.Count() > 1)
-            {
-                item = item.ToLower();
-                books = await _context.Books.Where(n => n.Title.Contains(item) || n.Isbn.ToString().Contains(item) || n.Author.Contains(item) || n.Price.ToString().Contains(item)).ToListAsync();
-                //books = await _context.Books.Where(n => n.Title.Contains(item)).ToListAsync();
-            }
-            else
-            {
-                books = await _context.Books.ToListAsync();
-                //books = await _context.Books.Where(n => n.Title.Contains(title)).ToListAsync();
-                //books = await GetBooks();
-            }
-            return books;
+            item = item.ToLower();
+
+            return books = await _context.Books
+                .Where(n => n.Title.Contains(item) || n.Isbn.ToString().Contains(item) || n.Author.Contains(item) || n.Price.ToString().Contains(item))
+                .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+                .Take(booksParameters.PageSize)
+                .ToListAsync();
         }
 
         public async Task<Book> GetBookById(int id)
@@ -67,7 +61,7 @@ namespace CatalogoLivros.Service
             return book;
 
         }
-        public async Task<Book> InsertBook(long isbn)
+        public async Task<Book> InsertBook(string isbn)
         {
             
             var book = await _context.Books.FindAsync(isbn);
@@ -76,8 +70,7 @@ namespace CatalogoLivros.Service
         }
 
         public async Task CreateBook(Book book)
-        {
-             
+        {             
             _context.Books.Add(book);
                 await _context.SaveChangesAsync();
                        
