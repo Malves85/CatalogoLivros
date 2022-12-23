@@ -20,8 +20,9 @@ export default function Books() {
   const [searchInput, setSearchInput] = useState("");
   const [filtro, setFiltro] = useState([]);
   //paginação
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
   const pageSize = 6;
+
 
   const [bookSelected, setbookSelected] = useState({
     id: "",
@@ -30,21 +31,6 @@ export default function Books() {
     author: "",
     price: "",
   });
-
-  const searchBooks = (searchValue: string) => {
-    setSearchInput(searchValue);
-    if (searchInput !== "") {
-      const dadosFiltrados = data.filter((item) => {
-        return Object.values(item)
-          .join("")
-          .toLowerCase()
-          .includes(searchInput.toLowerCase());
-      });
-      setFiltro(dadosFiltrados);
-    } else {
-      setFiltro(data);
-    }
-  };
 
   const selectBook = (book: any, opcao: string) => {
     setbookSelected(book);
@@ -61,6 +47,68 @@ export default function Books() {
     setModalExcluir(!modalExcluir);
   };
 
+  //Filtro
+
+  const searchReset = () => {
+    setSearchInput("");
+    pedidoGet();
+  };
+
+  const searchBooks = async (e: any) => {
+    e.preventDefault();
+    const res = await (await axios.get(`https://localhost:7043/api/Books/searchBook?PageNumber=1&PageSize=50&item=${searchInput}`)).data;
+        const total:number = res.length;
+        setPageCount(Math.ceil(total/pageSize));
+      console.log(total);
+    return await axios
+    .get(`https://localhost:7043/api/Books/searchBook?PageNumber=1&PageSize=${pageSize}&item=${searchInput}`)
+    .then((response) => {
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
+      
+
+  {/*const searchBooks = async (searchValue: string) => {
+    setSearchInput(searchValue);
+    console.log("variavel "+searchValue+" "+searchInput)
+    if (searchValue !== "" && searchValue.length>0) {
+    const res = await (await axios.get("https://localhost:7043/api/Books/searchBook?item="+searchValue)).data;
+    const total:number = res.length;
+    setPageCount(Math.ceil((total/pageSize)));
+    console.log(total);
+      const dadosFiltrados = res.filter((item:any) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(searchValue.toLowerCase());
+      });
+      
+      setFiltro(dadosFiltrados);
+    } else {
+      setFiltro(data);
+    }
+  };  
+
+  const searchBooks = (searchValue: string) => {
+    setSearchInput(searchValue);
+    if (searchInput !== "") {
+      const dadosFiltrados = data.filter((item) => {
+        return Object.values(item)
+          .join("")
+          .toLowerCase()
+          .includes(searchInput.toLowerCase());
+      });
+      setFiltro(dadosFiltrados);
+    } else {
+      setFiltro(data);
+    }
+  };*/}
+  //end
+  
+  //recebe os dados inserido nos formularios incluir ou editar livro
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setbookSelected({
@@ -69,15 +117,17 @@ export default function Books() {
     });
     console.log(bookSelected);
   };
-
+  //end
+  
+  //Busca todos os dados com a paginação
   const pedidoGet = async () => {
-    const res = await (await axios.get(baseUrl)).data;
+    const res = await (await axios.get(`${baseUrl}?PageNumber=1&PageSize=50`)).data;
         const total:number = res.length;
-        setPageCount(Math.ceil((total/pageSize)+1));
+        setPageCount(Math.ceil(total/pageSize));
       console.log(total);
 
     await axios
-      .get(baseUrl+"?PageNumber=1&PageSize="+pageSize)
+      .get(`${baseUrl}?PageNumber=1&PageSize=${pageSize}`)
       .then((response) => {
         setData(response.data);
       })
@@ -85,7 +135,9 @@ export default function Books() {
         console.log(error);
       });
   };
+  //end
 
+  //Envia os dados do novo livro
   const pedidoPost = async () => {
     delete bookSelected.id;
     await axios
@@ -99,7 +151,9 @@ export default function Books() {
         console.log(error);
       });
   };
+  //End
 
+  //Envia os dados da edição de um livro
   const pedidoPut = async () => {
     await axios
       .put(baseUrl + "/" + bookSelected.id, bookSelected)
@@ -129,7 +183,9 @@ export default function Books() {
         console.log(error);
       });
   };
+  //end
 
+  //Altera a visibilidade do livro deletado, ou seja soft delete
   const pedidoDelete = async () => {
     await axios
       .delete(baseUrl + "/" + bookSelected.id)
@@ -142,19 +198,29 @@ export default function Books() {
         console.log(error);
       });
   };
-  //Atualiza os dados
+  //end
+
+  //Atualiza os dados da pagina
   useEffect(() => {
     if (updateData) {
       pedidoGet();
       setUpdateData(false);
     }
-    
   },[updateData]);
+  //end
+
   // Paginação
   const fetchBooks = async (currentPage: number) => {
-    const res = await fetch(baseUrl+'?PageNumber='+currentPage+'&PageSize='+pageSize);
+    if(searchInput === ""){
+      const res = await fetch(`${baseUrl}?PageNumber=${currentPage}&PageSize=${pageSize}`);
     const temp = res.json();
     return temp;
+    }else{
+      const res = await fetch(`${baseUrl}?PageNumber=${currentPage}&PageSize=${pageSize}&item=${searchInput}`);
+    const temp = res.json();
+    return temp;
+    }
+    
   }; 
 console.log(data);
 
@@ -165,16 +231,23 @@ console.log(data);
     setData (booksFormServer); 
   }
   // end
+
+
   return (
     <div className="Book-container">
-      <form className="d-flex" role="search">
+      <form className="d-flex" role="search" onSubmit={searchBooks}>
         <input
           className="form-control me-2 bg-light"
           type="search"
-          placeholder="Search by title"
+          placeholder="Buscar"
           aria-label="Search"
-          onChange={(e) => searchBooks(e.target.value)}
+          
+          onChange={(e) => setSearchInput(e.target.value)}
         />
+        <button className="btn btn-success md-2" type="submit">
+        Ok</button>
+        <button className="btn btn-danger md-2" onClick={() => searchReset()}>
+        Resetar</button>
       </form>
       <button
         className="btn btn-success md-2"
@@ -183,7 +256,8 @@ console.log(data);
         Incluir novo Livro
       </button>
 
-      {searchInput.length > 1 ? (
+
+      {/*{searchInput.length > 2 ? (
         <Row xs={2 | 1} md={3} className="g-1">
           {filtro.map(
             (book: {
@@ -193,12 +267,12 @@ console.log(data);
               author: string;
               price: number;
             }) => (
-              <Col>
+              <Col key={book.id}>
                 <Card border="primary" bg="light">
                   <Card.Body>
                     <Card.Title>Book</Card.Title>
                     <Card.Text>
-                      <p key={book.id}>
+                      
                         <b>Isbn </b>
                         {book.isbn}
                         <br></br>
@@ -223,13 +297,25 @@ console.log(data);
                         >
                           Excluir
                         </button>
-                      </p>
+                      
                     </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
             )
           )}
+        </Row>
+      )*/} 
+      {searchInput.length < 2 && searchInput !== "" ?(
+        <div className="justify-content-center">
+        <h4>É preciso mais que 1 caracter</h4>
+      </div>
+      ) : (
+        data.length === 0 && searchInput.length > 2? (
+        <Row xs={2 | 1} md={3} className="g-1" >
+          <div className="justify-content-center">
+            <h4>Livro não encontrado</h4>
+          </div>
         </Row>
       ) : (
         <Row xs={2 | 1} md={3} className="g-1">
@@ -241,12 +327,12 @@ console.log(data);
               author: string;
               price: number;
             }) => (
-              <Col>
+              <Col key={book.id}>
                 <Card border="primary" bg="light">
                   <Card.Body>
                     <Card.Title>Book</Card.Title>
                     <Card.Text>
-                      <p key={book.id}>
+                      
                         <b>Isbn </b>
                         {book.isbn}
                         <br></br>
@@ -271,7 +357,7 @@ console.log(data);
                         >
                           Excluir
                         </button>
-                      </p>
+                      
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -279,7 +365,9 @@ console.log(data);
             )
           )}
         </Row>
+      )
       )}
+      {}
 
 <ReactPaginate 
         previousLabel={'previous'}
