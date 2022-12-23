@@ -61,11 +61,30 @@ namespace CatalogoLivros.Service
             return book;
 
         }
-        public async Task<Book> InsertBook(string isbn)
+
+        public async Task<IEnumerable<Book>> GetBooksByIsbn(string isbn)
         {
-            
-            var book = await _context.Books.FindAsync(isbn);
-            return book;
+
+            IEnumerable<Book> books;
+
+            if (!string.IsNullOrEmpty(isbn))
+            {
+                books = await _context.Books.Where(b => (b.Isbn.ToString()).Contains(isbn)).ToListAsync();
+            }
+            else
+            {
+                books = await _context.Books.ToListAsync();
+            }
+            return books;
+        }
+
+        public async Task InsertBook(Book book)
+        {
+
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+
 
         }
 

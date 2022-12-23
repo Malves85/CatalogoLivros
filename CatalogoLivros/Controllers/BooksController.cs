@@ -2,6 +2,11 @@
 using CatalogoLivros.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 namespace CatalogoLivros.Controllers
 {
     [Route("api/[controller]")]
@@ -74,6 +79,8 @@ namespace CatalogoLivros.Controllers
 
         [HttpGet("{id:int}", Name = "GetBookById")]
 
+        
+
         public async Task<ActionResult<IAsyncEnumerable<Book>>> GetBookById(int id)
         {
             try
@@ -89,8 +96,36 @@ namespace CatalogoLivros.Controllers
                 return BadRequest("Inválid Request");
             }
         }
+
         [HttpPost]
-        public async Task<ActionResult> Create(Book book)
+
+        public async Task<ActionResult> Insert(Book book)
+        {
+            try
+            {
+                var hasIsbn = await _bookService.GetBooksByIsbn(book.Isbn.ToString());
+
+                if (hasIsbn.Any() != true && book.Price > 0)
+                {
+                    await _bookService.InsertBook(book);
+                    return Ok(book);
+                }
+                else if (hasIsbn.Any() == true)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"O ISBN {book.Isbn} já existe no catálogo");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Impossivel adicionar um livro com preço negativo");
+                }
+            }
+            catch
+            {
+                return BadRequest("Request inválido");
+            }
+        }
+
+        /*public async Task<ActionResult> Create(Book book)
         {
             try
             {
@@ -99,16 +134,16 @@ namespace CatalogoLivros.Controllers
                     await _bookService.CreateBook(book);
                     return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
 
-                    /*var isbn = _bookService.InsertBook(book.Isbn).ToString();
-                    if (isbn.Any() != true)
-                    {
-                        await _bookService.CreateBook(book);
-                        return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
-                    }
-                    else
-                    {
-                         return BadRequest("Isbn já existe");
-                    }*/
+                    //var isbn = _bookService.InsertBook(book.Isbn).ToString();
+                    //if (isbn.Any() != true)
+                    //{
+                        //await _bookService.CreateBook(book);
+                        //return CreatedAtRoute(nameof(GetBookById), new { id = book.Id }, book);
+                    //}
+                    //else
+                    //{
+                         //return BadRequest("Isbn já existe");
+                    //}
                     
                 }
                 else
@@ -122,7 +157,7 @@ namespace CatalogoLivros.Controllers
 
                 return BadRequest("Inválid Request");
             }
-        }
+        }*/
 
         [HttpPut("{id:int}")]
         public async Task<ActionResult> Edit(int id, [FromBody] Book book)
