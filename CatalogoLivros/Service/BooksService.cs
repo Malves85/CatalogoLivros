@@ -54,6 +54,53 @@ namespace CatalogoLivros.Service
                 .Take(booksParameters.PageSize)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Book>> sortBook(BooksParameters booksParameters, string sort)
+        {
+            IEnumerable<Book> books;
+
+            if (sort == "Id")
+            {
+                return FindAll()
+                .OrderBy(on => on.Id)
+                .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+                .Take(booksParameters.PageSize)
+                .ToList();
+            }
+            else if (sort == "Isbn")
+            {
+                return FindAll()
+            .OrderBy(on => on.Isbn)
+            .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+            .Take(booksParameters.PageSize)
+            .ToList();
+            }
+            else if (sort == "Author")
+            {
+                return FindAll()
+             .OrderBy(on => on.Author)
+             .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+             .Take(booksParameters.PageSize)
+             .ToList();
+            }
+            else if (sort == "Price")
+            {
+               return FindAll()
+            .OrderBy(on => on.Price)
+            .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+            .Take(booksParameters.PageSize)
+            .ToList();
+            }
+            else
+            {
+                return FindAll()
+            .OrderBy(on => on.Title)
+            .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
+            .Take(booksParameters.PageSize)
+            .ToList();
+            }
+           
+
+        }
 
         public async Task<Book> GetBookById(int id)
         {
@@ -78,16 +125,6 @@ namespace CatalogoLivros.Service
             return books;
         }
 
-        public async Task InsertBook(Book book)
-        {
-
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-
-
-        }
-
         public async Task CreateBook(Book book)
         {             
             _context.Books.Add(book);
@@ -107,5 +144,7 @@ namespace CatalogoLivros.Service
             _context.Entry(book).CurrentValues["isDeleted"] = true;
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }
