@@ -58,16 +58,34 @@ namespace CatalogoLivros.Controllers
             searchBook([FromQuery] BooksParameters booksParameters, string item)
         {
             try
-            {   if (item.Count() > 1)
+            {
+                if (item.Count() <= 1)
                 {
-                    var books = await _bookService.searchBook(booksParameters, item);
-                    return Ok(books);
-                }
-                else
-                {
-                    return NotFound($"é preciso colocar mais de 1 carater");
+                    return NotFound($"é preciso colocar no minimo 2 caracteres");
                     //return NotFound($"Não existem livros com o critério {item}");
                 }
+            
+                var books = await _bookService.searchBook(booksParameters, item);
+                return Ok(books);
+                
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Erro ao obter livros");
+            }
+        }
+
+
+        [HttpGet("sortBook")]
+
+        public async Task<ActionResult<IAsyncEnumerable<Book>>>
+            sortBook([FromQuery] BooksParameters booksParameters, string sort)
+        {
+            try
+            {
+                var books = await _bookService.sortBook(booksParameters, sort);
+                return Ok(books);
 
             }
             catch
@@ -77,17 +95,19 @@ namespace CatalogoLivros.Controllers
             }
         }
 
+
         [HttpGet("{id:int}", Name = "GetBookById")]
-
-        
-
         public async Task<ActionResult<IAsyncEnumerable<Book>>> GetBookById(int id)
         {
             try
             {
                 var book = await _bookService.GetBookById(id);
                 if (book == null)
+                {
                     return NotFound($"Não existem livros com o id = {id}");
+                }
+                    
+
 
                 return Ok(book);
             }
@@ -99,25 +119,18 @@ namespace CatalogoLivros.Controllers
 
         [HttpPost]
 
-        public async Task<ActionResult> Insert(Book book)
+        public async Task<ActionResult> Create(Book book)
         {
             try
             {
                 var hasIsbn = await _bookService.GetBooksByIsbn(book.Isbn.ToString());
 
-                if (hasIsbn.Any() != true && book.Price > 0)
+                if (hasIsbn.Any() == true)
                 {
-                    await _bookService.InsertBook(book);
-                    return Ok(book);
+                    return StatusCode(StatusCodes.Status500InternalServerError, $"Esse ISBN {book.Isbn} já existe");
                 }
-                else if (hasIsbn.Any() == true)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, $"O ISBN {book.Isbn} já existe no catálogo");
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Impossivel adicionar um livro com preço negativo");
-                }
+                await _bookService.CreateBook(book);
+                return Ok(book);
             }
             catch
             {
@@ -164,16 +177,13 @@ namespace CatalogoLivros.Controllers
         {
             try
             {
-                if (book.Id == id)
-                {
-                    await _bookService.UpdateBook(book);
-                    return Ok($"livro com id = {id} foi atualizado com sucesso");
-
-                }
-                else
+                if (book.Id != id)
                 {
                     return BadRequest("Dados inválidos");
                 }
+                await _bookService.UpdateBook(book);
+                    return Ok($"livro com id = {id} foi atualizado com sucesso");
+                
             }
             catch
             {
@@ -188,16 +198,13 @@ namespace CatalogoLivros.Controllers
             try
             {
                 var book = await _bookService.GetBookById(id);
-                if (book != null)
-                {
-                    await _bookService.DeleteBookById(book);
-                    return Ok($"livro com id = {id} foi excluído com sucesso");
-
-                }
-                else
+                if (book == null)
                 {
                     return NotFound($"livro com id = {id} não foi encontrado");
                 }
+
+                await _bookService.DeleteBookById(book);
+                    return Ok($"livro com id = {id} foi excluído com sucesso");
             }
             catch
             {
