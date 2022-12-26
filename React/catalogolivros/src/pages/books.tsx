@@ -22,6 +22,9 @@ export default function Books() {
   //paginação
   const [pageCount, setPageCount] = useState(1);
   const pageSize = 6;
+  //ordenar
+  const [sortValue, setSortValue] = useState("");
+  const sortOptions = ["Id", "Isbn", "Title", "Author", "Price"];
 
 
   const [bookSelected, setbookSelected] = useState({
@@ -70,6 +73,22 @@ export default function Books() {
     });
   };
       
+  const sortBooks = async (e: any) => {
+    let value =  e.target.value;
+    setSortValue(value);
+    const res = await (await axios.get(`https://localhost:7043/api/Books/sortBook?PageNumber=1&PageSize=50&sort=${value}`)).data;
+        const total:number = res.length;
+        setPageCount(Math.ceil(total/pageSize));
+      console.log(total);
+    return await axios
+    .get(`https://localhost:7043/api/Books/sortBook?PageNumber=1&PageSize=${pageSize}&sort=${value}`)
+    .then((response) => {
+      setData(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
 
   {/*const searchBooks = async (searchValue: string) => {
     setSearchInput(searchValue);
@@ -211,12 +230,17 @@ export default function Books() {
 
   // Paginação
   const fetchBooks = async (currentPage: number) => {
-    if(searchInput === ""){
+    if(searchInput === "" && sortValue === ""){
       const res = await fetch(`${baseUrl}?PageNumber=${currentPage}&PageSize=${pageSize}`);
     const temp = res.json();
     return temp;
-    }else{
-      const res = await fetch(`${baseUrl}?PageNumber=${currentPage}&PageSize=${pageSize}&item=${searchInput}`);
+    }else if(searchInput !== "") {
+      const res = await fetch(`${baseUrl}/searchBook?PageNumber=${currentPage}&PageSize=${pageSize}&item=${searchInput}`);
+    const temp = res.json();
+    return temp;
+    }
+    else{
+      const res = await fetch(`${baseUrl}/sortBook?PageNumber=${currentPage}&PageSize=${pageSize}&sort=${sortValue}`);
     const temp = res.json();
     return temp;
     }
@@ -241,7 +265,7 @@ console.log(data);
           type="search"
           placeholder="Buscar"
           aria-label="Search"
-          
+          value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
         <button className="btn btn-success md-2" type="submit">
@@ -249,69 +273,37 @@ console.log(data);
         <button className="btn btn-danger md-2" onClick={() => searchReset()}>
         Resetar</button>
       </form>
-      <button
-        className="btn btn-success md-2"
-        onClick={() => abrirFecharModalIncluir()}
-      >
-        Incluir novo Livro
-      </button>
-
-
-      {/*{searchInput.length > 2 ? (
-        <Row xs={2 | 1} md={3} className="g-1">
-          {filtro.map(
-            (book: {
-              id: number;
-              isbn: number;
-              title: string;
-              author: string;
-              price: number;
-            }) => (
-              <Col key={book.id}>
-                <Card border="primary" bg="light">
-                  <Card.Body>
-                    <Card.Title>Book</Card.Title>
-                    <Card.Text>
-                      
-                        <b>Isbn </b>
-                        {book.isbn}
-                        <br></br>
-                        <b>Title </b>
-                        {book.title}
-                        <br></br>
-                        <b>Author </b>
-                        {book.author}
-                        <br></br>
-                        <b>Price </b>
-                        {book.price}
-                        <br></br>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => selectBook(book, "Editar")}
-                        >
-                          Editar
-                        </button>{" "}
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => selectBook(book, "Excluir")}
-                        >
-                          Excluir
-                        </button>
-                      
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            )
-          )}
+      
+      <Row >
+        <Col>
+        <button className="btn btn-success md-2" onClick={() => abrirFecharModalIncluir()}
+      >Incluir novo Livro</button>
+        </Col>
+        <Col>
+        <Row>
+          <Col>
+          <h5>Ordenar por:</h5>
+          </Col>
+          <Col>
+            <select style={{width:"50&", borderRadius:"2px", height:"35px"}}
+            onChange={sortBooks}
+            value={sortValue}>
+              <option>Selecionar um valor</option>
+              {sortOptions.map((item, index) => (
+                <option value={item} key={index}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </Col>
+                <Col></Col><Col></Col>
+                
         </Row>
-      )*/} 
-      {searchInput.length < 2 && searchInput !== "" ?(
-        <div className="justify-content-center">
-        <h4>É preciso mais que 1 caracter</h4>
-      </div>
-      ) : (
-        data.length === 0 && searchInput.length > 2? (
+        </Col>
+      </Row>
+
+      {
+        data.length === 0 && searchInput.length > 2 ? (
         <Row xs={2 | 1} md={3} className="g-1" >
           <div className="justify-content-center">
             <h4>Livro não encontrado</h4>
@@ -366,8 +358,8 @@ console.log(data);
           )}
         </Row>
       )
-      )}
-      {}
+      }
+      
 
 <ReactPaginate 
         previousLabel={'previous'}
@@ -434,7 +426,6 @@ console.log(data);
           <button className="btn btn-primary" onClick={() => pedidoPost()}>
             Incluir
           </button>{" "}
-          {"   "}
           <button
             className="btn btn-danger"
             onClick={() => abrirFecharModalIncluir()}
