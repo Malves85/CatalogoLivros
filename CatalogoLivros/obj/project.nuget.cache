@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "I7VSx5/Ht0dv4XgngOlQrOHVJe22sbDvwPCA/Jjhr3PdnAGPNXh0Jb7evc4/bN+DPV5kF5cvjiiIJvbU04z8eQ==",
+  "dgSpecHash": "o93mTDqDbVZXFF+uR6+Efqjsh56INgRqsxYdceFPdMojoT7KDgHg8bsTLQZHvBQu3fM/1/mA/ut3lKZRj41uDg==",
   "success": true,
   "projectFilePath": "C:\\Users\\marce\\Downloads\\Samsys\\CatalogoLivros\\CatalogoLivros\\CatalogoLivros\\CatalogoLivros.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\marce\\.nuget\\packages\\ardalis.smartenum\\2.1.0\\ardalis.smartenum.2.1.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\ardalis.smartenum.systemtextjson\\2.1.0\\ardalis.smartenum.systemtextjson.2.1.0.nupkg.sha512",
     "C:\\Users\\marce\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\marce\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\marce\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
