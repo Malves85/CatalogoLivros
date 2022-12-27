@@ -179,7 +179,10 @@ namespace CatalogoLivros.Controllers
             {
                 if (book.Id != id)
                 {
-                    return BadRequest("Dados inválidos");
+                    response.StatusCode = 401;
+                               context.Fail("Invalid Data");
+                               return Task.CompletedTask;
+                    //return BadRequest("Dados inválidos");
                 }
                 await _bookService.UpdateBook(book);
                     return Ok($"livro com id = {id} foi atualizado com sucesso");
