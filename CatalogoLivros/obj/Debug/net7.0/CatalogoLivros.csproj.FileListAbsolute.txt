@@ -1,7 +1,0 @@
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.csproj.AssemblyReference.cache
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.AssemblyInfoInputs.cache
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.AssemblyInfo.cs
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.csproj.CoreCompileInputs.cache
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros\obj\Debug\net7.0\CatalogoLivros.MvcApplicationPartsAssemblyInfo.cache
