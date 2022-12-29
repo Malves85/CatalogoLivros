@@ -1,4 +1,5 @@
-﻿using CatalogoLivros.Models;
+﻿using CatalogoLivros.Helpers;
+using CatalogoLivros.Models;
 using CatalogoLivros.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,12 @@ namespace CatalogoLivros.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult GetBooks([FromQuery] BooksParameters booksParameters)
+        public async Task<PaginatedList<Book>> GetAll(int currentPage = 1, int pageSize = 5)
+        {
+            return await _bookService.GetBooks(currentPage, pageSize);
+        }
+
+        /*public IActionResult GetBooks([FromQuery] BooksParameters booksParameters)
         {
             try
             {
@@ -36,7 +42,7 @@ namespace CatalogoLivros.Controllers
 
 
             }
-        }
+        }*/
 
         /*public async Task<ActionResult<IAsyncEnumerable<Book>>> GetBooks()
         {
@@ -119,23 +125,9 @@ namespace CatalogoLivros.Controllers
 
         [HttpPost]
 
-        public async Task<ActionResult> Create(Book book)
+        public async Task<MessagingHelper<int>> Create(Book book)
         {
-            try
-            {
-                var hasIsbn = await _bookService.GetBooksByIsbn(book.Isbn.ToString());
-
-                if (hasIsbn.Any() == true)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, $"Esse ISBN {book.Isbn} já existe");
-                }
-                await _bookService.CreateBook(book);
-                return Ok(book);
-            }
-            catch
-            {
-                return BadRequest("Request inválido");
-            }
+            return await _bookService.CreateBook(book);
         }
 
         /*public async Task<ActionResult> Create(Book book)
@@ -179,10 +171,7 @@ namespace CatalogoLivros.Controllers
             {
                 if (book.Id != id)
                 {
-                    response.StatusCode = 401;
-                               context.Fail("Invalid Data");
-                               return Task.CompletedTask;
-                    //return BadRequest("Dados inválidos");
+                    return BadRequest("Dados inválidos");
                 }
                 await _bookService.UpdateBook(book);
                     return Ok($"livro com id = {id} foi atualizado com sucesso");
