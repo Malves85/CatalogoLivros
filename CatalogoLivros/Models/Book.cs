@@ -11,7 +11,7 @@ namespace CatalogoLivros.Models
         public long Isbn { get; set; }
         [Required]
         [StringLength(80)]
-        public string Title { get; set; }
+        public string Title { get; set; } 
         [Required]
         [StringLength(80)]
         public string Author { get; set; }

@@ -1,27 +1,56 @@
-﻿using CatalogoLivros.Context;
+﻿using Azure.Core;
+using CatalogoLivros.Context;
+using CatalogoLivros.Helpers;
 using CatalogoLivros.Models;
 using Microsoft.EntityFrameworkCore;
-using static System.Reflection.Metadata.BlobBuilder;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection.Metadata;
 
 namespace CatalogoLivros.Service
 {
     public class BooksService : IBookService
     {
         private readonly AppDbContext _context;
+        private IBookService _bookService;
 
         public BooksService(AppDbContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Book> GetBooks(BooksParameters booksParameters)
+        public async Task<PaginatedList<Book>> GetBooks(int currentPage = 1, int pageSize = 5)
+        {
+            PaginatedList<Book> response = new PaginatedList<Book>();
+
+            var query = _context.Books.AsQueryable();
+            
+
+            response.TotalRecords = query.Count();
+
+            var numberOfItemsToSkip = pageSize * (currentPage - 1);
+
+            query = query.Skip(numberOfItemsToSkip);
+            query = query.Take(pageSize);
+
+            var list = await query.ToListAsync();
+
+            response.Items = list;
+            response.CurrentPage = currentPage;
+            response.PageSize = pageSize;
+            response.Success = true;
+            response.Message = null;
+
+            return response;
+
+        }
+        /*public IEnumerable<Book> GetBooks(BooksParameters booksParameters)
         {
             return FindAll()
                 .OrderBy(on => on.Title)
                 .Skip((booksParameters.PageNumber - 1) * booksParameters.PageSize)
                 .Take(booksParameters.PageSize)
                 .ToList();
-        }
+        }*/
         public IQueryable<Book> FindAll()
         {
             return this._context.Set<Book>();
@@ -125,11 +154,31 @@ namespace CatalogoLivros.Service
             return books;
         }
 
-        public async Task CreateBook(Book book)
-        {             
-            _context.Books.Add(book);
-                await _context.SaveChangesAsync();
-                       
+        public async Task<MessagingHelper<int>> CreateBook(Book book)
+        {
+            MessagingHelper<int> response = new();
+
+            try
+            {
+                //var hasIsbn = await _bookService.GetBooksByIsbn(book.Isbn.ToString());
+
+                /*if (hasIsbn.Any() == true)
+                {
+                    response.Success = false;
+                    response.Message = "Esse Isbn já existe";
+                    return response;
+                }*/
+                 _context.Books.Add(book);
+                 await _context.SaveChangesAsync();
+                response.Success = true;
+                response.Message = "Livro criado com sucesso";
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = "Ocorreu um erro inesperado ao criar um livro";
+            }
+            return response;
         }
 
         public async Task UpdateBook(Book book)
