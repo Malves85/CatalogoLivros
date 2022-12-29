@@ -21,7 +21,7 @@ export default function Books() {
   const [filtro, setFiltro] = useState([]);
   //paginação
   const [pageCount, setPageCount] = useState(1);
-  const pageSize = 6;
+  const pageSize = 5;
   //ordenar
   const [sortValue, setSortValue] = useState("");
   const sortOptions = ["Id", "Isbn", "Title", "Author", "Price"];
@@ -140,15 +140,16 @@ export default function Books() {
   
   //Busca todos os dados com a paginação
   const pedidoGet = async () => {
-    const res = await (await axios.get(`${baseUrl}?PageNumber=1&PageSize=50`)).data;
-        const total:number = res.length;
-        setPageCount(Math.ceil(total/pageSize));
-      console.log(total);
+    const res = await (await axios.get(`${baseUrl}`)).data;
+        const total:number = res.totalRecords;
+        setPageCount(res.totalPages);
+      console.log("total "+total);
+      console.log("pages "+pageCount);
 
     await axios
-      .get(`${baseUrl}?PageNumber=1&PageSize=${pageSize}`)
+      .get(`${baseUrl}`)
       .then((response) => {
-        setData(response.data);
+        setData(response.data.items);
       })
       .catch((error) => {
         console.log(error);
@@ -231,7 +232,7 @@ export default function Books() {
   // Paginação
   const fetchBooks = async (currentPage: number) => {
     if(searchInput === "" && sortValue === ""){
-      const res = await fetch(`${baseUrl}?PageNumber=${currentPage}&PageSize=${pageSize}`);
+      const res = await fetch(`${baseUrl}?currentPage=${currentPage}&pageSize=${pageSize}`);
     const temp = res.json();
     return temp;
     }else if(searchInput !== "") {
@@ -250,9 +251,11 @@ console.log(data);
 
   const handlePageClick = async (data:any)=>{
     console.log(data.selected+1);
-    let currentPage = data.selected +1
+
+    let currentPage = data.selected+1;
     const booksFormServer = await fetchBooks(currentPage);
-    setData (booksFormServer); 
+    setData (booksFormServer.items);
+    console.log(booksFormServer); 
   }
   // end
 
