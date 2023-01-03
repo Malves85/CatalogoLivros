@@ -1,4 +1,5 @@
 using CatalogoLivros.Context;
+using CatalogoLivros.Repositories;
 using CatalogoLivros.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IBookService, BooksService>();
+builder.Services.AddScoped<IBookRepository, BooksRepository>();
 builder.Services.AddDbContext<AppDbContext>();
 
 

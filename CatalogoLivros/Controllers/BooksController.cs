@@ -1,12 +1,9 @@
 ﻿using CatalogoLivros.Helpers;
 using CatalogoLivros.Models;
 using CatalogoLivros.Service;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
+using System.Security.Claims;
 
 namespace CatalogoLivros.Controllers
 {
@@ -20,14 +17,76 @@ namespace CatalogoLivros.Controllers
         {
             _bookService = bookService;
         }
-        [HttpGet]
+
+        [HttpPost("getAll")]
+        public async Task<PaginatedList<ListBook>> GetAll(Search search)
+        {
+            return await _bookService.GetAll(search);
+        }
+
+        [HttpPost("create")]
+        public async Task<MessagingHelper<int>> Create(CreateBook createBook)
+        {
+            return await _bookService.Create(createBook);
+        }
+
+        [HttpPost("update")]
+        public async Task<MessagingHelper<BookDTO>> Update(EditBook editBook)
+        {
+            return await _bookService.Update(editBook);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<MessagingHelper<BookDTO>> GetById(int id)          
+        {
+            
+            return await _bookService.GetById(id);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var book = await _bookService.GetBookById(id);
+                if (book == null)
+                {
+                    return NotFound($"livro com id = {id} não foi encontrado");
+                }
+
+                await _bookService.DeleteBookById(book);
+                return Ok($"livro com id = {id} foi excluído com sucesso");
+            }
+            catch
+            {
+
+                return BadRequest("Inválid Request");
+            }
+        }
+
+        /*[HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public async Task<PaginatedList<Book>> GetAll(int currentPage = 1, int pageSize = 5)
+        public async Task<PaginatedList<Book>> GetAll([FromQuery]Search search)
         {
-            return await _bookService.GetBooks(currentPage, pageSize);
-        }
+            if (search.currentPage <= 0) 
+            {
+                search.currentPage = 1;
+            }
+
+            if (search.pageSize <= 0)   
+            {
+                search.pageSize = 1;
+            }
+
+            if (search.pageSize > 10)
+            {
+                search.pageSize = 10;
+            }
+
+            return await _bookService.GetBooks(search.currentPage, search.pageSize, search.sorting, search.searching);
+        }*/
 
         /*public IActionResult GetBooks([FromQuery] BooksParameters booksParameters)
         {
@@ -58,7 +117,7 @@ namespace CatalogoLivros.Controllers
             }
         }*/
 
-        [HttpGet("searchBook")]
+        /*[HttpGet("searchBook")]
 
         public async Task<ActionResult<IAsyncEnumerable<Book>>>
             searchBook([FromQuery] BooksParameters booksParameters, string item)
@@ -121,14 +180,14 @@ namespace CatalogoLivros.Controllers
             {
                 return BadRequest("Inválid Request");
             }
-        }
+        }*/
 
-        [HttpPost]
 
+        /*[HttpPost]
         public async Task<MessagingHelper<int>> Create(Book book)
         {
             return await _bookService.CreateBook(book);
-        }
+        }*/
 
         /*public async Task<ActionResult> Create(Book book)
         {
@@ -164,7 +223,7 @@ namespace CatalogoLivros.Controllers
             }
         }*/
 
-        [HttpPut("{id:int}")]
+        /*[HttpPut("{id:int}")]
         public async Task<ActionResult> Edit(int id, [FromBody] Book book)
         {
             try
@@ -182,28 +241,9 @@ namespace CatalogoLivros.Controllers
 
                 return BadRequest("Inválid Request");
             }
-        }
+        }*/
 
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            try
-            {
-                var book = await _bookService.GetBookById(id);
-                if (book == null)
-                {
-                    return NotFound($"livro com id = {id} não foi encontrado");
-                }
 
-                await _bookService.DeleteBookById(book);
-                    return Ok($"livro com id = {id} foi excluído com sucesso");
-            }
-            catch
-            {
-
-                return BadRequest("Inválid Request");
-            }
-        }
 
     }
 }
