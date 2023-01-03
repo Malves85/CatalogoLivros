@@ -16,11 +16,12 @@ namespace CatalogoLivros.Models
         [StringLength(80)]
         public string Author { get; set; }
         [Required]
-        [Range( 0, 999, ErrorMessage = "Price must be >= 0")]
+        [Range( 0, 999, ErrorMessage = "Preço tem de ser maior que 0")]
         public double Price { get; set; }
         [DefaultValue(false)]
         public bool isDeleted { get; set; }
 
     }
+
 }
 
