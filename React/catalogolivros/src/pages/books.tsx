@@ -18,14 +18,14 @@ export default function Books() {
   const [modalExcluir, setModalExcluir] = useState(false);
   //filtrar dados
   const [searchInput, setSearchInput] = useState("");
-  const [filtro, setFiltro] = useState([]);
   //paginação
   const [pageCount, setPageCount] = useState(1);
-  const pageSize = 5;
+  const pageSize = 6;
+  const [curPage, setCurPage] = useState(1);
   //ordenar
   const [sortValue, setSortValue] = useState("");
-  const sortOptions = ["Id", "Isbn", "Title", "Author", "Price"];
-
+  const sortOptions = ["Id", "Isbn", "title", "author", "Price"];
+  const [forcePage, setForcePage] = useState(0);
 
   const [bookSelected, setbookSelected] = useState({
     id: "",
@@ -33,6 +33,13 @@ export default function Books() {
     title: "",
     author: "",
     price: "",
+  });
+
+  const [getBooks, setGetBooks] = useState({
+  currentPage: 1,
+  pageSize: 6,
+  searching: "",
+  sorting: "",
   });
 
   const selectBook = (book: any, opcao: string) => {
@@ -52,42 +59,54 @@ export default function Books() {
 
   //Filtro
 
-  const searchReset = () => {
+  const searchReset = async () => {
     setSearchInput("");
-    pedidoGet();
+    setGetBooks({
+      ...getBooks, currentPage:0
+    })
   };
 
   const searchBooks = async (e: any) => {
     e.preventDefault();
-    const res = await (await axios.get(`https://localhost:7043/api/Books/searchBook?PageNumber=1&PageSize=50&item=${searchInput}`)).data;
+    setGetBooks({
+      ...getBooks, currentPage:1, searching:searchInput
+    })
+    setForcePage(0);
+    setUpdateData(true);
+    /*const res = await (await axios.get(`${baseUrl}?currentPage=1&pageSize=${pageSize}&search=${searchInput}`)).data;
         const total:number = res.length;
         setPageCount(Math.ceil(total/pageSize));
       console.log(total);
     return await axios
-    .get(`https://localhost:7043/api/Books/searchBook?PageNumber=1&PageSize=${pageSize}&item=${searchInput}`)
+    .get(`${baseUrl}?currentPage=1&pageSize=${pageSize}&search=${searchInput}`)
     .then((response) => {
       setData(response.data);
+      setUpdateData(true);
     })
     .catch((error) => {
       console.log(error);
-    });
+    });*/
   };
       
   const sortBooks = async (e: any) => {
     let value =  e.target.value;
     setSortValue(value);
-    const res = await (await axios.get(`https://localhost:7043/api/Books/sortBook?PageNumber=1&PageSize=50&sort=${value}`)).data;
-        const total:number = res.length;
-        setPageCount(Math.ceil(total/pageSize));
+    setGetBooks({
+      ...getBooks, sorting:value
+    }) 
+    setUpdateData(true);
+    /*const res = await (await axios.get(`${baseUrl}?currentPage=1&order=${value}`)).data;
+        const total:number = res.totalRecords;
       console.log(total);
-    return await axios
-    .get(`https://localhost:7043/api/Books/sortBook?PageNumber=1&PageSize=${pageSize}&sort=${value}`)
+      console.log("sort "+value);
+    return res.items; await axios
+    .get(`${baseUrl}?currentPage=1&order=${sortValue}`)
     .then((response) => {
       setData(response.data);
     })
     .catch((error) => {
       console.log(error);
-    });
+    });*/
   };
 
   {/*const searchBooks = async (searchValue: string) => {
@@ -140,28 +159,29 @@ export default function Books() {
   
   //Busca todos os dados com a paginação
   const pedidoGet = async () => {
-    const res = await (await axios.get(`${baseUrl}`)).data;
-        const total:number = res.totalRecords;
-        setPageCount(res.totalPages);
-      console.log("total "+total);
-      console.log("pages "+pageCount);
+    const res = await (await axios.post(`${baseUrl}/getAll`,getBooks)).data;
+    const total:number = res.totalRecords;
+    setPageCount(res.totalPages);
+    console.log("total "+total);
 
     await axios
-      .get(`${baseUrl}`)
+      .post(`${baseUrl}/getAll`,getBooks)
       .then((response) => {
         setData(response.data.items);
+        console.log("current "+res.currentPage)
       })
       .catch((error) => {
         console.log(error);
       });
   };
   //end
+  
 
   //Envia os dados do novo livro
   const pedidoPost = async () => {
     delete bookSelected.id;
     await axios
-      .post(baseUrl, bookSelected)
+      .post(baseUrl+"/create", bookSelected)
       .then((response) => {
         setData(data.concat(response.data));
         setUpdateData(true);
@@ -176,7 +196,7 @@ export default function Books() {
   //Envia os dados da edição de um livro
   const pedidoPut = async () => {
     await axios
-      .put(baseUrl + "/" + bookSelected.id, bookSelected)
+      .post(baseUrl + "/update" , bookSelected)
       .then((response) => {
         var resposta = response.data;
         var dadosAuxiliar = data;
@@ -189,6 +209,7 @@ export default function Books() {
             price: number;
           }) => {
             if (book.id === bookSelected.id) {
+              
               book.isbn = resposta.isbn;
               book.title = resposta.title;
               book.author = resposta.author;
@@ -230,32 +251,41 @@ export default function Books() {
   //end
 
   // Paginação
-  const fetchBooks = async (currentPage: number) => {
-    if(searchInput === "" && sortValue === ""){
-      const res = await fetch(`${baseUrl}?currentPage=${currentPage}&pageSize=${pageSize}`);
-    const temp = res.json();
+  /* const fetchBooks = async (currentPage: number) => {
+    //if(searchInput === "" && sortValue === ""){
+    const res = await fetch(`${baseUrl}/getAll`, getBooks);
+    console.log("res "+res)
+    const temp = res.currentPage;
+    console.log("temp "+temp)
+    //setData(await axios.post(`${baseUrl}/getAll`,{ ...getBooks, currentPage: current}));
     return temp;
-    }else if(searchInput !== "") {
-      const res = await fetch(`${baseUrl}/searchBook?PageNumber=${currentPage}&PageSize=${pageSize}&item=${searchInput}`);
+    /*}else if(searchInput !== "") {
+      const res = await fetch(`${baseUrl}?currentPage=${currentPage}&search=${searchInput}`);
     const temp = res.json();
     return temp;
     }
     else{
-      const res = await fetch(`${baseUrl}/sortBook?PageNumber=${currentPage}&PageSize=${pageSize}&sort=${sortValue}`);
+      const res = await fetch(`${baseUrl}?currentPage=${currentPage}&order=${sortValue}`);
     const temp = res.json();
     return temp;
     }
     
-  }; 
-console.log(data);
+  };
+console.log("data "+data);*/
 
   const handlePageClick = async (data:any)=>{
-    console.log(data.selected+1);
-
+   /* console.log(data.selected+1);
     let currentPage = data.selected+1;
     const booksFormServer = await fetchBooks(currentPage);
     setData (booksFormServer.items);
-    console.log(booksFormServer); 
+    setUpdateData(true);
+    console.log("bookFormServer "+booksFormServer);*/
+    let current = data.selected+1;
+    setGetBooks({
+      ...getBooks, currentPage:current
+    })
+    setForcePage(data.selected);
+    setUpdateData(true);
   }
   // end
 
@@ -368,6 +398,7 @@ console.log(data);
         previousLabel={'previous'}
         nextLabel={'next'}
         breakLabel={'...'} 
+        forcePage={forcePage}
         pageCount={pageCount}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
