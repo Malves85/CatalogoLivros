@@ -44,7 +44,13 @@ namespace CatalogoLivros.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<MessagingHelper> Delete(int id)
+        {
+            return await _bookService.DeleteBook(id);
+            
+        }
+
+        /*public async Task<ActionResult> Delete(int id)
         {
             try
             {
@@ -62,7 +68,7 @@ namespace CatalogoLivros.Controllers
 
                 return BadRequest("Inválid Request");
             }
-        }
+        }*/
 
         /*[HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
