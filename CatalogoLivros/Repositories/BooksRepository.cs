@@ -15,6 +15,13 @@ namespace CatalogoLivros.Repositories
         {
             _context = context;
         }
+        // Busca a existencia de um ISBN
+        public async Task<bool> Exist(long id)
+        {
+            return await _context.Books.Where(x => x.isDeleted == false).AnyAsync(x => x.Isbn == id);
+        }
+
+
         // Update book
         public async Task<Book> Update(Book book)
         {
