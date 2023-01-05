@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CatalogoLivros.Models
 {

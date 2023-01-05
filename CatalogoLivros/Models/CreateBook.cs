@@ -1,16 +1,14 @@
 ﻿using FluentValidation;
-using CatalogoLivros.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
+using CatalogoLivros.Entity;
 
 namespace CatalogoLivros.Models
 {
     public class CreateBook
     {
-        public long Isbn { get; set; } = 0;
+        public long Isbn { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
-        public decimal Price { get; set; } = 0;
+        public decimal Price { get; set; }
         
             public Book ToEntity()
         {

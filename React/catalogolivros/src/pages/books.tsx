@@ -339,19 +339,19 @@ console.log("data "+data);*/
               <Col key={book.id}>
                 <Card border="primary" bg="light">
                   <Card.Body>
-                    <Card.Title>Book</Card.Title>
+                    <Card.Title>Livro</Card.Title>
                     <Card.Text>
                       
                         <b>Isbn </b>
                         {book.isbn}
                         <br></br>
-                        <b>Title </b>
+                        <b>Título </b>
                         {book.title}
                         <br></br>
-                        <b>Author </b>
+                        <b>Autor </b>
                         {book.author}
                         <br></br>
-                        <b>Price </b>
+                        <b>Preço </b>
                         {parseFloat(book.price).toFixed(2).toString().replace(".",",")}€
                         <br></br>
                         <button
@@ -413,7 +413,7 @@ console.log("data "+data);*/
               onChange={handleChange}
             />
             <br />
-            <label>Title: </label>
+            <label>Título: </label>
             <br />
             <input
               type="text"
@@ -422,7 +422,7 @@ console.log("data "+data);*/
               onChange={handleChange}
             />
             <br />
-            <label>Author: </label>
+            <label>Autor: </label>
             <input
               type="text"
               className="form-control"
@@ -430,7 +430,7 @@ console.log("data "+data);*/
               onChange={handleChange}
             />
             <br />
-            <label>Price: </label>
+            <label>Preço: </label>
             <input
               type="number"
               className="form-control"
@@ -476,7 +476,7 @@ console.log("data "+data);*/
               value={bookSelected && bookSelected.isbn}
             />
             <br />
-            <label>Title: </label>
+            <label>Título: </label>
             <br />
             <input
               type="text"
@@ -486,7 +486,7 @@ console.log("data "+data);*/
               value={bookSelected && bookSelected.title}
             />
             <br />
-            <label>Author: </label>
+            <label>Autor: </label>
             <input
               type="text"
               className="form-control"
@@ -495,7 +495,7 @@ console.log("data "+data);*/
               value={bookSelected && bookSelected.author}
             />
             <br />
-            <label>Price: </label>
+            <label>Preço: </label>
             <input
               type="number"
               className="form-control"

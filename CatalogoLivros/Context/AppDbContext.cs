@@ -1,4 +1,4 @@
-﻿using CatalogoLivros.Models;
+﻿using CatalogoLivros.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoLivros.Context

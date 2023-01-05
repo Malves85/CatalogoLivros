@@ -1,7 +1,6 @@
 ﻿using CatalogoLivros.Context;
+using CatalogoLivros.Entity;
 using CatalogoLivros.Helpers;
-using CatalogoLivros.Models;
-using CatalogoLivros.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoLivros.Repositories

@@ -1,5 +1,5 @@
-﻿using CatalogoLivros.Helpers;
-using CatalogoLivros.Models;
+﻿using CatalogoLivros.Entity;
+using CatalogoLivros.Helpers;
 
 namespace CatalogoLivros.Repositories
 {
