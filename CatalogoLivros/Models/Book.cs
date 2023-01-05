@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CatalogoLivros.Models
 {
@@ -17,7 +19,8 @@ namespace CatalogoLivros.Models
         public string Author { get; set; }
         [Required]
         [Range( 0, 999, ErrorMessage = "Preço tem de ser maior que 0")]
-        public double Price { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Price { get; set; }
         [DefaultValue(false)]
         public bool isDeleted { get; set; }
 

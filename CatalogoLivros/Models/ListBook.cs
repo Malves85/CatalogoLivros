@@ -1,4 +1,7 @@
 ﻿
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace CatalogoLivros.Models
 {
     public class ListBook
@@ -7,7 +10,7 @@ namespace CatalogoLivros.Models
         public long Isbn { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public bool isDeleted { get; set; }
 
         public ListBook(Book book)

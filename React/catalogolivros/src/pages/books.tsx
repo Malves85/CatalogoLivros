@@ -7,6 +7,9 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ReactPaginate from "react-paginate";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Toast from "../Helpers/toast";
 
 export default function Books() {
 
@@ -24,15 +27,15 @@ export default function Books() {
   const [curPage, setCurPage] = useState(1);
   //ordenar
   const [sortValue, setSortValue] = useState("");
-  const sortOptions = ["Id", "Isbn", "title", "author", "Price"];
+  const sortOptions = ["Isbn", "Title", "Author", "Price"];
   const [forcePage, setForcePage] = useState(0);
 
   const [bookSelected, setbookSelected] = useState({
     id: "",
-    isbn: "",
+    isbn: 0,
     title: "",
     author: "",
-    price: "",
+    price: 0,
   });
 
   const [getBooks, setGetBooks] = useState({
@@ -48,9 +51,17 @@ export default function Books() {
   };
 
   const abrirFecharModalIncluir = () => {
+    
+    setbookSelected ({ ...bookSelected, 
+      isbn: 0,
+      title: "",
+      author: "",
+      price: 0
+    })
     setModalIncluir(!modalIncluir);
   };
   const abrirFecharModalEditar = () => {
+      
     setModalEditar(!modalEditar);
   };
   const abrirFecharModalExcluir = () => {
@@ -62,30 +73,17 @@ export default function Books() {
   const searchReset = async () => {
     setSearchInput("");
     setGetBooks({
-      ...getBooks, currentPage:0
+      ...getBooks
     })
   };
 
   const searchBooks = async (e: any) => {
     e.preventDefault();
     setGetBooks({
-      ...getBooks, currentPage:1, searching:searchInput
+      ...getBooks, searching:searchInput, currentPage : 1
     })
     setForcePage(0);
     setUpdateData(true);
-    /*const res = await (await axios.get(`${baseUrl}?currentPage=1&pageSize=${pageSize}&search=${searchInput}`)).data;
-        const total:number = res.length;
-        setPageCount(Math.ceil(total/pageSize));
-      console.log(total);
-    return await axios
-    .get(`${baseUrl}?currentPage=1&pageSize=${pageSize}&search=${searchInput}`)
-    .then((response) => {
-      setData(response.data);
-      setUpdateData(true);
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
   };
       
   const sortBooks = async (e: any) => {
@@ -95,55 +93,7 @@ export default function Books() {
       ...getBooks, sorting:value
     }) 
     setUpdateData(true);
-    /*const res = await (await axios.get(`${baseUrl}?currentPage=1&order=${value}`)).data;
-        const total:number = res.totalRecords;
-      console.log(total);
-      console.log("sort "+value);
-    return res.items; await axios
-    .get(`${baseUrl}?currentPage=1&order=${sortValue}`)
-    .then((response) => {
-      setData(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });*/
   };
-
-  {/*const searchBooks = async (searchValue: string) => {
-    setSearchInput(searchValue);
-    console.log("variavel "+searchValue+" "+searchInput)
-    if (searchValue !== "" && searchValue.length>0) {
-    const res = await (await axios.get("https://localhost:7043/api/Books/searchBook?item="+searchValue)).data;
-    const total:number = res.length;
-    setPageCount(Math.ceil((total/pageSize)));
-    console.log(total);
-      const dadosFiltrados = res.filter((item:any) => {
-        return Object.values(item)
-          .join("")
-          .toLowerCase()
-          .includes(searchValue.toLowerCase());
-      });
-      
-      setFiltro(dadosFiltrados);
-    } else {
-      setFiltro(data);
-    }
-  };  
-
-  const searchBooks = (searchValue: string) => {
-    setSearchInput(searchValue);
-    if (searchInput !== "") {
-      const dadosFiltrados = data.filter((item) => {
-        return Object.values(item)
-          .join("")
-          .toLowerCase()
-          .includes(searchInput.toLowerCase());
-      });
-      setFiltro(dadosFiltrados);
-    } else {
-      setFiltro(data);
-    }
-  };*/}
   //end
   
   //recebe os dados inserido nos formularios incluir ou editar livro
@@ -153,7 +103,7 @@ export default function Books() {
       ...bookSelected,
       [name]: value,
     });
-    console.log(bookSelected);
+    
   };
   //end
   
@@ -184,8 +134,15 @@ export default function Books() {
       .post(baseUrl+"/create", bookSelected)
       .then((response) => {
         setData(data.concat(response.data));
+        if (response.data.success)
+        {
+          Toast.Show("success", response.data.message);
+          abrirFecharModalIncluir();
+        }else{
+          Toast.Show("error", response.data.message);
+        }
         setUpdateData(true);
-        abrirFecharModalIncluir();
+        
       })
       .catch((error) => {
         console.log(error);
@@ -208,17 +165,25 @@ export default function Books() {
             author: string;
             price: number;
           }) => {
-            if (book.id === bookSelected.id) {
-              
+            
+            if (book.id === bookSelected.id){
               book.isbn = resposta.isbn;
               book.title = resposta.title;
               book.author = resposta.author;
               book.price = resposta.price;
-            }
+            }  
           }
         );
-        setUpdateData(true);
+
+        if (response.data.success)
+        {Toast.Show("success", response.data.message);
+        }
+        else{
+          Toast.Show("error", response.data.message);
+        }
         abrirFecharModalEditar();
+        setUpdateData(true);
+        
       })
       .catch((error) => {
         console.log(error);
@@ -234,6 +199,12 @@ export default function Books() {
         setData(data.filter((book) => book !== response.data));
         setUpdateData(true);
         abrirFecharModalExcluir();
+        if(response.data.success){
+          Toast.Show("success", response.data.message);
+        }
+        else{
+          Toast.Show("error", response.data.message);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -288,8 +259,7 @@ console.log("data "+data);*/
     setUpdateData(true);
   }
   // end
-
-
+  
   return (
     <div className="Book-container">
       <form className="d-flex" role="search" onSubmit={searchBooks}>
@@ -311,6 +281,20 @@ console.log("data "+data);*/
         <Col>
         <button className="btn btn-success md-2" onClick={() => abrirFecharModalIncluir()}
       >Incluir novo Livro</button>
+
+      <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="light"
+      />
+
         </Col>
         <Col>
         <Row>
@@ -321,7 +305,7 @@ console.log("data "+data);*/
             <select style={{width:"50&", borderRadius:"2px", height:"35px"}}
             onChange={sortBooks}
             value={sortValue}>
-              <option>Selecionar um valor</option>
+              <option>Id</option>
               {sortOptions.map((item, index) => (
                 <option value={item} key={index}>
                   {item}
@@ -350,7 +334,7 @@ console.log("data "+data);*/
               isbn: number;
               title: string;
               author: string;
-              price: number;
+              price: any;
             }) => (
               <Col key={book.id}>
                 <Card border="primary" bg="light">
@@ -368,7 +352,7 @@ console.log("data "+data);*/
                         {book.author}
                         <br></br>
                         <b>Price </b>
-                        {book.price}
+                        {parseFloat(book.price).toFixed(2).toString().replace(".",",")}€
                         <br></br>
                         <button
                           className="btn btn-primary"
@@ -446,7 +430,7 @@ console.log("data "+data);*/
               onChange={handleChange}
             />
             <br />
-            <label>price: </label>
+            <label>Price: </label>
             <input
               type="number"
               className="form-control"
