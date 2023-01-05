@@ -1,8 +1,5 @@
-﻿using CatalogoLivros.Helpers;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿
+using CatalogoLivros.Entity;
 
 namespace CatalogoLivros.Models
 {
