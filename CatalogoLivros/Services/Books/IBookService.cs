@@ -1,7 +1,7 @@
 ﻿using CatalogoLivros.Helpers;
-using CatalogoLivros.Models;
+using CatalogoLivros.Models.Books;
 
-namespace CatalogoLivros.Service
+namespace CatalogoLivros.Services.Books
 {
     public interface IBookService
     {
@@ -10,7 +10,7 @@ namespace CatalogoLivros.Service
         Task<MessagingHelper<BookDTO>> Update(EditBook editBook);
         Task<MessagingHelper<int>> Create(CreateBook createBook);
         Task<PaginatedList<ListBook>> GetAll(Search search);
-        
+
     }
 }
 

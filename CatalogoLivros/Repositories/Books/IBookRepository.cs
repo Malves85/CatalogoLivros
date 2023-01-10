@@ -1,7 +1,7 @@
 ﻿using CatalogoLivros.Entity;
 using CatalogoLivros.Helpers;
 
-namespace CatalogoLivros.Repositories
+namespace CatalogoLivros.Repositories.Books
 {
     public interface IBookRepository
     {

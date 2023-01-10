@@ -15,14 +15,16 @@ namespace CatalogoLivros.Entity
         [StringLength(80)]
         public string Title { get; set; }
         [Required]
-        [StringLength(80)]
-        public string Author { get; set; }
-        [Required]
         [Range(0, 999, ErrorMessage = "Preço tem de ser maior que 0")]
-        [Column(TypeName = "decimal(18, 2)")]
+        [Column(TypeName = "decimal(6, 2)")]
         public decimal Price { get; set; }
         [DefaultValue(false)]
         public bool isDeleted { get; set; }
+        public string? image { get; set; }
+        
+        public int AuthorId{ get; set; }
+        
+        public Author Author { get; set; } = null!;
 
     }
 
