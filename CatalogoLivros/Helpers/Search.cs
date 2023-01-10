@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata;
-
-namespace CatalogoLivros.Helpers
+﻿namespace CatalogoLivros.Helpers
 {
     public class Search
     {

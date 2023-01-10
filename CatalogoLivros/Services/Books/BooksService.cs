@@ -1,10 +1,10 @@
 ﻿using CatalogoLivros.Context;
 using CatalogoLivros.Helpers;
-using CatalogoLivros.Models;
-using CatalogoLivros.Repositories;
+using CatalogoLivros.Models.Books;
+using CatalogoLivros.Repositories.Books;
 using System.Data;
 
-namespace CatalogoLivros.Service
+namespace CatalogoLivros.Services.Books
 {
     public class BooksService : IBookService
     {
@@ -32,7 +32,7 @@ namespace CatalogoLivros.Service
                 }
 
                 _context.Entry(responseRepository).CurrentValues["isDeleted"] = true;
-                 await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 result.Success = true;
                 result.Message = "Livro deletado com sucesso";
                 return result;
@@ -52,7 +52,7 @@ namespace CatalogoLivros.Service
 
         public async Task<MessagingHelper<BookDTO>> GetById(int id)
         {
-            MessagingHelper<BookDTO> result = new();                  
+            MessagingHelper<BookDTO> result = new();
             try
             {
                 var responseRepository = await _bookRepository.GetById(id);
@@ -84,7 +84,7 @@ namespace CatalogoLivros.Service
             {
                 EditBookValidator validator = new();
                 var responseValidator = validator.Validate(editBook);
-                if (responseValidator.IsValid == false)                
+                if (responseValidator.IsValid == false)
                 {
                     result.Success = false;
                     result.Message = responseValidator.Errors.FirstOrDefault().ErrorMessage;
@@ -96,7 +96,9 @@ namespace CatalogoLivros.Service
                     result.Message = "Este livro não existe";
                     return result;
                 }
-                if (editBook.Isbn == bookDB.Isbn && editBook.Title == bookDB.Title && editBook.Author == bookDB.Author && editBook.Price == bookDB.Price)
+                //if (editBook.Isbn == bookDB.Isbn && editBook.Title == bookDB.Title && editBook.Author == bookDB.Author && editBook.Price == bookDB.Price)
+                if (editBook.Isbn == bookDB.Isbn && editBook.Title == bookDB.Title && editBook.Price == bookDB.Price && editBook.AuthorId == bookDB.AuthorId)
+
                 {
                     result.Success = false;
                     result.Message = "Nenhuma alteração feita";
@@ -105,7 +107,7 @@ namespace CatalogoLivros.Service
 
                 bookDB.Isbn = editBook.Isbn;
                 bookDB.Title = editBook.Title;
-                bookDB.Author = editBook.Author;                 
+                bookDB.AuthorId = editBook.AuthorId;                 
                 bookDB.Price = editBook.Price;
 
                 var bookUpDate = await _bookRepository.Update(bookDB);
@@ -147,7 +149,7 @@ namespace CatalogoLivros.Service
                     return response;
                 }
                 var newBook = createBook.ToEntity();
-                var assistanceInDB = await _bookRepository.Create(newBook); 
+                var assistanceInDB = await _bookRepository.Create(newBook);
                 if (assistanceInDB == null)
                 {
                     response.Message = "Erro ao criar o livro!";
@@ -201,16 +203,17 @@ namespace CatalogoLivros.Service
                 response.CurrentPage = responseRepository.CurrentPage;
                 response.TotalRecords = responseRepository.TotalRecords;
                 response.Success = true;
-                }
-                catch (Exception ex){
-                    
-                    response.Success = false;
-                    response.Message = "Ocorreu um erro ao obter os livros.";
-                }
+            }
+            catch (Exception ex)
+            {
 
-                return response;
+                response.Success = false;
+                response.Message = "Ocorreu um erro ao obter os livros.";
+            }
+
+            return response;
         }
 
-        
+
     }
 }

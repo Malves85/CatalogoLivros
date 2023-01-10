@@ -1,6 +1,8 @@
 using CatalogoLivros.Context;
-using CatalogoLivros.Repositories;
-using CatalogoLivros.Service;
+using CatalogoLivros.Repositories.Authors;
+using CatalogoLivros.Repositories.Books;
+using CatalogoLivros.Services.Authors;
+using CatalogoLivros.Services.Books;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IBookService, BooksService>();
 builder.Services.AddScoped<IBookRepository, BooksRepository>();
+builder.Services.AddScoped<IAuthorsService, AuthorsService>();
+builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+
 builder.Services.AddDbContext<AppDbContext>();
 
 

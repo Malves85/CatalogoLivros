@@ -1,9 +1,7 @@
 ﻿using CatalogoLivros.Helpers;
-using CatalogoLivros.Models;
-using CatalogoLivros.Service;
+using CatalogoLivros.Models.Books;
+using CatalogoLivros.Services.Books;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Security.Claims;
 
 namespace CatalogoLivros.Controllers
 {

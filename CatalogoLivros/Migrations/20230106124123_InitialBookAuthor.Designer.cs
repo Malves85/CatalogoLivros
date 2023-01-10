@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogoLivros.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230104113213_Price-decimal")]
-    partial class Pricedecimal
+    [Migration("20230106124123_InitialBookAuthor")]
+    partial class InitialBookAuthor
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace CatalogoLivros.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CatalogoLivros.Models.Book", b =>
+            modelBuilder.Entity("CatalogoLivros.Entity.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,16 +32,39 @@ namespace CatalogoLivros.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Harper Lee"
+                        });
+                });
+
+            modelBuilder.Entity("CatalogoLivros.Entity.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
 
                     b.Property<long>("Isbn")
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(6, 2)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -53,13 +76,15 @@ namespace CatalogoLivros.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.ToTable("Books");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Author = "Harper Lee",
+                            AuthorId = 1,
                             Isbn = 9789896412746L,
                             Price = 16.20m,
                             Title = "Mataram a Cotovia",
@@ -68,7 +93,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 2,
-                            Author = "Fiódor Dostoiévski",
+                            AuthorId = 1,
                             Isbn = 9789896410803L,
                             Price = 20.19m,
                             Title = "Crime e Castigo",
@@ -77,7 +102,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 3,
-                            Author = "Miguel de Cervantes",
+                            AuthorId = 1,
                             Isbn = 9789720730237L,
                             Price = 8.7m,
                             Title = "Histórias de Dom Quixote",
@@ -86,7 +111,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 4,
-                            Author = "Jonathan Black",
+                            AuthorId = 1,
                             Isbn = 9789526458521L,
                             Price = 20.19m,
                             Title = "História Secreta do Mundo",
@@ -95,7 +120,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 5,
-                            Author = "Jean-François Marmion",
+                            AuthorId = 1,
                             Isbn = 9789899033214L,
                             Price = 18.9m,
                             Title = "A Psicologia da Estupidez",
@@ -104,7 +129,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 6,
-                            Author = "Ricardo Araújo Pereira",
+                            AuthorId = 1,
                             Isbn = 9789896714536L,
                             Price = 12.00m,
                             Title = "Estar Vivo Aleija",
@@ -113,7 +138,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 7,
-                            Author = "Daron Acemoglu",
+                            AuthorId = 1,
                             Isbn = 9789896441975L,
                             Price = 24.40m,
                             Title = "Porque Falham as Nações",
@@ -122,7 +147,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 8,
-                            Author = "Steven Levitsky",
+                            AuthorId = 1,
                             Isbn = 9789896684662L,
                             Price = 15.50m,
                             Title = "Como Morrem as democracias",
@@ -131,7 +156,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 9,
-                            Author = "Pedro Baños",
+                            AuthorId = 1,
                             Isbn = 9789897244315L,
                             Price = 18.5m,
                             Title = "Os donos do mundo",
@@ -140,7 +165,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 10,
-                            Author = "Virginia Woolf",
+                            AuthorId = 1,
                             Isbn = 9789720726803L,
                             Price = 5.94m,
                             Title = "A Viúva e o Papagaio",
@@ -149,7 +174,7 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 11,
-                            Author = "Paulo Coelho",
+                            AuthorId = 1,
                             Isbn = 9789722524223L,
                             Price = 8.00m,
                             Title = "O alquimista",
@@ -158,12 +183,28 @@ namespace CatalogoLivros.Migrations
                         new
                         {
                             Id = 12,
-                            Author = "Stephen Hawking",
+                            AuthorId = 1,
                             Isbn = 9789896162931L,
                             Price = 7.89m,
                             Title = "A teoria de tudo",
                             isDeleted = false
                         });
+                });
+
+            modelBuilder.Entity("CatalogoLivros.Entity.Book", b =>
+                {
+                    b.HasOne("CatalogoLivros.Entity.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("CatalogoLivros.Entity.Author", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

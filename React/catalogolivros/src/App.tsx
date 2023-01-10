@@ -32,6 +32,11 @@ export default function App() {
                   Livros
                 </a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/authors">
+                  Autores
+                </a>
+              </li>
             </ul>
 
           </div>
