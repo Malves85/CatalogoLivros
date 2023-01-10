@@ -1,13 +1,14 @@
 ﻿using CatalogoLivros.Entity;
 
-namespace CatalogoLivros.Models
+namespace CatalogoLivros.Models.Books
 {
     public class ListBook
     {
         public int Id { get; set; }
         public long Isbn { get; set; }
         public string Title { get; set; }
-        public string Author { get; set; }
+        public int AuthorId { get; set; }
+        public string AuthorName { get; set; }
         public decimal Price { get; set; }
         public bool isDeleted { get; set; }
 
@@ -16,11 +17,12 @@ namespace CatalogoLivros.Models
             Id = book.Id;
             Isbn = book.Isbn;
             Title = book.Title;
-            Author = book.Author;
+            AuthorId = book.AuthorId;
+            AuthorName = book.Author.Name;
             Price = book.Price;
             isDeleted = book.isDeleted;
 
         }
     }
-    
+
 }

@@ -3,7 +3,7 @@ using CatalogoLivros.Entity;
 using CatalogoLivros.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace CatalogoLivros.Repositories
+namespace CatalogoLivros.Repositories.Books
 {
     public class BooksRepository : IBookRepository
     {
@@ -56,7 +56,7 @@ namespace CatalogoLivros.Repositories
         {
             PaginatedList<Book> response = new PaginatedList<Book>();
 
-            var query = _context.Books.AsQueryable();
+            var query = _context.Books.Include(t => t.Author).AsQueryable();
 
             if (sort.Count() > 0 && sort != null)
             {
@@ -65,13 +65,13 @@ namespace CatalogoLivros.Repositories
                     case "isbn":
                         query = query.OrderBy(x => x.Isbn);
                         break;
-                    case "title":
+                    case "título":
                         query = query.OrderBy(x => x.Title);
                         break;
-                    case "author":
+                    /*case "author":
                         query = query.OrderBy(x => x.Author);
-                        break;
-                    case "price":
+                        break;*/
+                    case "preço":
                         query = query.OrderBy(x => x.Price);
                         break;
                     default:
@@ -83,11 +83,11 @@ namespace CatalogoLivros.Repositories
             if (search.Count() > 0)
             {
                 search = search.ToLower().Trim();
-                query = query.Where(n => n.Title.Contains(search) || n.Isbn.ToString().Contains(search) || n.Author.Contains(search) || n.Price.ToString().Contains(search));
+                query = query.Where(n => n.Title.Contains(search) || n.Isbn.ToString().Contains(search) || n.Price.ToString().Contains(search) || n.Author.Name.Contains(search));
 
             }
 
-            response.TotalRecords = query.Count();
+            response.TotalRecords = query.Count();   
 
             var numberOfItemsToSkip = pageSize * (currentPage - 1);
 

@@ -2,7 +2,7 @@ import "./books.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { CardImg, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
@@ -10,11 +10,10 @@ import ReactPaginate from "react-paginate";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../Helpers/toast";
-import internal from "stream";
 
-export default function Books() {
+export default function Authors(){
 
-  const baseUrl = "https://localhost:7043/api/Books";
+    const baseUrl = "https://localhost:7043/api/Authors";
   const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState(true);
   const [modalIncluir, setModalIncluir] = useState(false);
@@ -28,36 +27,32 @@ export default function Books() {
   const [curPage, setCurPage] = useState(1);
   //ordenar
   const [sortValue, setSortValue] = useState("");
-  const sortOptions = ["Isbn", "Título", "Preço"];
+  const sortOptions = ["Nome", "País"];
   const [forcePage, setForcePage] = useState(0);
 
-  const [bookSelected, setbookSelected] = useState({
+  const [authorSelected, setAuthorSelected] = useState({
     id: "",
-    isbn: 0,
-    title: "",
-    authorId: 0,
-    price: 0,
+    name: "",
+    nacionality: "",
+    image: ""
   });
 
-  const [getBooks, setGetBooks] = useState({
+  const [getAuthors, setGetAuthors] = useState({
   currentPage: 1,
   pageSize: 6,
   searching: "",
   sorting: "",
   });
 
-  const selectBook = (book: any, opcao: string) => {
-    setbookSelected(book);
+  const selectAuthor = (author: any, opcao: string) => {
+    setAuthorSelected(author);
     opcao === "Editar" ? abrirFecharModalEditar() : abrirFecharModalExcluir();
   };
 
   const abrirFecharModalIncluir = () => {
     
-    setbookSelected ({ ...bookSelected, 
-      isbn: 0,
-      title: "",
-      authorId: 0,
-      price: 0
+    setAuthorSelected ({ ...authorSelected, 
+      name: "", nacionality: "", image:""
     })
     setModalIncluir(!modalIncluir);
   };
@@ -73,25 +68,25 @@ export default function Books() {
 
   const searchReset = async () => {
     setSearchInput("");
-    setGetBooks({
-      ...getBooks
+    setGetAuthors({
+      ...getAuthors
     })
   };
 
-  const searchBooks = async (e: any) => {
+  const searchAuthors = async (e: any) => {
     e.preventDefault();
-    setGetBooks({
-      ...getBooks, searching:searchInput, currentPage : 1
+    setGetAuthors({
+      ...getAuthors, searching:searchInput, currentPage : 1
     })
     setForcePage(0);
     setUpdateData(true);
   };
       
-  const sortBooks = async (e: any) => {
+  const sortAuthors = async (e: any) => {
     let value =  e.target.value;
     setSortValue(value);
-    setGetBooks({
-      ...getBooks, sorting:value
+    setGetAuthors({
+      ...getAuthors, sorting:value
     }) 
     setUpdateData(true);
   };
@@ -100,8 +95,8 @@ export default function Books() {
   //recebe os dados inserido nos formularios incluir ou editar livro
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setbookSelected({
-      ...bookSelected,
+    setAuthorSelected({
+      ...authorSelected,
       [name]: value,
     });
     
@@ -110,13 +105,13 @@ export default function Books() {
   
   //Busca todos os dados com a paginação
   const pedidoGet = async () => {
-    const res = await (await axios.post(`${baseUrl}/getAll`,getBooks)).data;
+    const res = await (await axios.post(`${baseUrl}/getAuthors`,getAuthors)).data;
     const total:number = res.totalRecords;
     setPageCount(res.totalPages);
     console.log("total "+total);
 
     await axios
-      .post(`${baseUrl}/getAll`,getBooks)
+      .post(`${baseUrl}/getAuthors`,getAuthors)
       .then((response) => {
         setData(response.data.items);
       })
@@ -129,9 +124,9 @@ export default function Books() {
 
   //Envia os dados do novo livro
   const pedidoPost = async () => {
-    delete bookSelected.id;
+    delete authorSelected.id;
     await axios
-      .post(baseUrl+"/create", bookSelected)
+      .post(baseUrl+"/create", authorSelected)
       .then((response) => {
         setData(data.concat(response.data));
         if (response.data.success)
@@ -153,24 +148,22 @@ export default function Books() {
   //Envia os dados da edição de um livro
   const pedidoPut = async () => {
     await axios
-      .post(baseUrl + "/update" , bookSelected)
+      .post(baseUrl + "/update" , authorSelected)
       .then((response) => {
         var resposta = response.data;
         var dadosAuxiliar = data;
         dadosAuxiliar.map(
-          (book: {
+          (author: {
             id: string;
-            isbn: number;
-            title: string;
-            author: string;
-            price: number;
+            name: string;
+            nacionality: string;
+            image: string;
           }) => {
             
-            if (book.id === bookSelected.id){
-              book.isbn = resposta.isbn;
-              book.title = resposta.title;
-              book.author = resposta.author;
-              book.price = resposta.price;
+            if (author.id === authorSelected.id){
+                author.name = resposta.name;
+                author.nacionality = resposta.nacionality;
+                author.image = resposta.image;                
             }  
           }
         );
@@ -194,9 +187,9 @@ export default function Books() {
   //Altera a visibilidade do livro deletado, ou seja soft delete
   const pedidoDelete = async () => {
     await axios
-      .delete(baseUrl + "/" + bookSelected.id)
+      .delete(baseUrl + "/" + authorSelected.id)
       .then((response) => {
-        setData(data.filter((book) => book !== response.data));
+        setData(data.filter((author) => author !== response.data));
         setUpdateData(true);
         abrirFecharModalExcluir();
         if(response.data.success){
@@ -223,8 +216,8 @@ export default function Books() {
 
   const handlePageClick = async (data:any)=>{
     let current = data.selected+1;
-    setGetBooks({
-      ...getBooks, currentPage:current
+    setGetAuthors({
+      ...getAuthors, currentPage:current
     })
     setForcePage(data.selected);
     setUpdateData(true);
@@ -249,7 +242,7 @@ export default function Books() {
       <Row >
       <Col>
         <button className="btn btn-success md-2" onClick={() => abrirFecharModalIncluir()}
-      >Incluir novo Livro</button>
+      >Incluir novo Autor</button>
         <br></br>
         </Col>
         <Col></Col>
@@ -258,7 +251,7 @@ export default function Books() {
         </Col>
         <Col>
           <select style={{width:"90px", borderRadius:"2px", height:"35px"}}
-            onChange={sortBooks}
+            onChange={sortAuthors}
             value={sortValue}>
               <option>Id</option>
               {sortOptions.map((item, index) => (
@@ -270,7 +263,7 @@ export default function Books() {
           </Col>
           <Col></Col>
         <Col>
-        <form className="d-flex" role="search" onSubmit={searchBooks}>
+        <form className="d-flex" role="search" onSubmit={searchAuthors}>
         <input style={{width:"250px", borderRadius:"2px", height:"35px"}}
           className="form-control me-2 bg-light"
           type="search"
@@ -293,46 +286,38 @@ export default function Books() {
         data.length === 0 && searchInput.length > 2 ? (
         <Row xs={2 | 1} md={3} className="g-1" >
           <div className="justify-content-center">
-            <h4>Livro não encontrado</h4>
+            <h4>Autor não encontrado</h4>
           </div>
         </Row>
       ) : (
         <Row xs={2 | 1} md={3} className="g-1">
           {data.map(
-            (book: {
+            (author: {
               id: number;
-              isbn: number;
-              title: string;
-              authorName: string;
-              price: any;
+              name: string;
+              nacionality: string;
+              image: string;
             }) => (
-              <Col key={book.id}>
+              <Col key={author.id}  width="50px">
                 <Card border="primary" bg="light">
                   <Card.Body>
-                    <Card.Title>Livro</Card.Title>
+                    <Card.Title>{author.name}</Card.Title>
                     <Card.Text>
-                      
-                        <b>Isbn </b>
-                        {book.isbn}
                         <br></br>
-                        <b>Título </b>
-                        {book.title}
+                        <CardImg width="50%" src={author.image} alt={author.name} />
                         <br></br>
-                        <b>Autor </b>
-                        {book.authorName}
-                        <br></br>
-                        <b>Preço </b>
-                        {parseFloat(book.price).toFixed(2).toString().replace(".",",")}€
-                        <br></br>
+                        <b>País: </b>
+                        {author.nacionality}
+                        <br></br><br></br>
                         <button
                           className="btn btn-primary"
-                          onClick={() => selectBook(book, "Editar")}
+                          onClick={() => selectAuthor(author, "Editar")}
                         >
                           Editar
                         </button>{" "}
                         <button
                           className="btn btn-danger"
-                          onClick={() => selectBook(book, "Excluir")}
+                          onClick={() => selectAuthor(author, "Excluir")}
                         >
                           Excluir
                         </button>
@@ -369,45 +354,37 @@ export default function Books() {
         activeClassName={'active'}
   />
 
-      {/* Modal incluir alunos */}
+      {/* Modal incluir autor */}
       <Modal isOpen={modalIncluir}>
-        <ModalHeader>Incluir novo Livro</ModalHeader>
+        <ModalHeader>Incluir novo Autor</ModalHeader>
         <ModalBody>
           <div className="form-group">
-            <label>Isbn: </label>
+            <label>Name: </label>
             <br />
             <input
               type="text"
               className="form-control"
-              name="isbn"
+              name="name"
               onChange={handleChange}
             />
             <br />
-            <label>Título: </label>
+            <label>Nacionality: </label>
             <br />
             <input
               type="text"
               className="form-control"
-              name="title"
+              name="nacionality"
               onChange={handleChange}
             />
             <br />
-            <label>Autor: </label>
+            <label>Imagem: </label>
+            <br />
             <input
               type="text"
               className="form-control"
-              name="author"
+              name="image"
               onChange={handleChange}
             />
-            <br />
-            <label>Preço: </label>
-            <input
-              type="number"
-              className="form-control"
-              name="price"
-              onChange={handleChange}
-            />
-            <br />
           </div>
         </ModalBody>
         <ModalFooter>
@@ -423,9 +400,9 @@ export default function Books() {
         </ModalFooter>
       </Modal>
 
-      {/* Modal Editar Alunos */}
+      {/* Modal Editar Autores */}
       <Modal isOpen={modalEditar}>
-        <ModalHeader>Editar Aluno</ModalHeader>
+        <ModalHeader>Editar Autor</ModalHeader>
         <ModalBody>
           <div className="form-group">
             <label>Id: </label>
@@ -433,47 +410,38 @@ export default function Books() {
               type="text"
               className="form-control"
               readOnly
-              value={bookSelected && bookSelected.id}
+              value={authorSelected && authorSelected.id}
             />
             <br />
-            <label>Isbn: </label>
+            <label>Name: </label>
             <br />
             <input
               type="text"
               className="form-control"
-              name="isbn"
+              name="name"
               onChange={handleChange}
-              value={bookSelected && bookSelected.isbn}
+              value={authorSelected && authorSelected.name}
             />
             <br />
-            <label>Título: </label>
+            <label>Nacionality: </label>
             <br />
             <input
               type="text"
               className="form-control"
-              name="title"
+              name="nacionality"
               onChange={handleChange}
-              value={bookSelected && bookSelected.title}
+              value={authorSelected && authorSelected.nacionality}
             />
             <br />
-            <label>Autor id: </label>
+            <label>Imagem: </label>
+            <br />
             <input
               type="text"
               className="form-control"
-              name="authorId"
+              name="image"
               onChange={handleChange}
-              value={bookSelected && bookSelected.authorId}
+              value={authorSelected && authorSelected.image}
             />
-            <br />
-            <label>Preço: </label>
-            <input
-              type="number"
-              className="form-control"
-              name="price"
-              onChange={handleChange}
-              value={bookSelected && bookSelected.price}
-            />
-            <br />
           </div>
         </ModalBody>
         <ModalFooter>
@@ -490,10 +458,10 @@ export default function Books() {
         </ModalFooter>
       </Modal>
 
-      {/* Modal excluir alunos */}
+      {/* Modal excluir autores */}
       <Modal isOpen={modalExcluir}>
         <ModalBody>
-          Confirma a exclusão do livro {bookSelected && bookSelected.title} ?
+          Confirma a exclusão do autor {authorSelected && authorSelected.name} ?
         </ModalBody>
         <ModalFooter>
           <button className="btn btn-danger" onClick={() => pedidoDelete()}>
