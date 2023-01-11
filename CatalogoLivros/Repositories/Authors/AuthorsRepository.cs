@@ -28,7 +28,7 @@ namespace CatalogoLivros.Repositories.Authors
         {
             PaginatedList<Author> response = new PaginatedList<Author>();
 
-            var query = _context.Authors.AsQueryable();
+            var query = _context.Authors.Include(t => t.Books).AsQueryable();
 
             if (sort.Count() > 0 && sort != null)
             {
@@ -49,7 +49,7 @@ namespace CatalogoLivros.Repositories.Authors
             if (search.Count() > 0)
             {
                 search = search.ToLower().Trim();
-                query = query.Where(n => n.Name.Contains(search) || n.Nacionality.ToString().Contains(search));
+                query = query.Where(n => n.Name.Contains(search) || n.Nacionality.Contains(search));
 
             }
 

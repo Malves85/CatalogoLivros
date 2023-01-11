@@ -11,6 +11,7 @@ namespace CatalogoLivros.Models.Books
         public string AuthorName { get; set; }
         public decimal Price { get; set; }
         public bool isDeleted { get; set; }
+        public string image { get; set; }
 
         public ListBook(Book book)
         {
@@ -21,6 +22,7 @@ namespace CatalogoLivros.Models.Books
             AuthorName = book.Author.Name;
             Price = book.Price;
             isDeleted = book.isDeleted;
+            image = book.image;
 
         }
     }
