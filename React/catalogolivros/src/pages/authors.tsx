@@ -1,19 +1,18 @@
-import "./books.css";
+import "./authors.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { CardImg, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ReactPaginate from "react-paginate";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Toast from "../Helpers/toast";
 
-export default function Authors(){
-
-    const baseUrl = "https://localhost:7043/api/Authors";
+export default function Authors() {
+  const baseUrl = "https://localhost:7043/api/Authors";
   const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState(true);
   const [modalIncluir, setModalIncluir] = useState(false);
@@ -23,8 +22,6 @@ export default function Authors(){
   const [searchInput, setSearchInput] = useState("");
   //paginação
   const [pageCount, setPageCount] = useState(1);
-  const pageSize = 6;
-  const [curPage, setCurPage] = useState(1);
   //ordenar
   const [sortValue, setSortValue] = useState("");
   const sortOptions = ["Nome", "País"];
@@ -34,14 +31,14 @@ export default function Authors(){
     id: "",
     name: "",
     nacionality: "",
-    image: ""
+    image: "",
   });
 
   const [getAuthors, setGetAuthors] = useState({
-  currentPage: 1,
-  pageSize: 6,
-  searching: "",
-  sorting: "",
+    currentPage: 1,
+    pageSize: 6,
+    searching: "",
+    sorting: "",
   });
 
   const selectAuthor = (author: any, opcao: string) => {
@@ -50,14 +47,15 @@ export default function Authors(){
   };
 
   const abrirFecharModalIncluir = () => {
-    
-    setAuthorSelected ({ ...authorSelected, 
-      name: "", nacionality: "", image:""
-    })
+    setAuthorSelected({
+      ...authorSelected,
+      name: "",
+      nacionality: "",
+      image: "",
+    });
     setModalIncluir(!modalIncluir);
   };
   const abrirFecharModalEditar = () => {
-      
     setModalEditar(!modalEditar);
   };
   const abrirFecharModalExcluir = () => {
@@ -69,29 +67,32 @@ export default function Authors(){
   const searchReset = async () => {
     setSearchInput("");
     setGetAuthors({
-      ...getAuthors
-    })
+      ...getAuthors,
+    });
   };
 
   const searchAuthors = async (e: any) => {
     e.preventDefault();
     setGetAuthors({
-      ...getAuthors, searching:searchInput, currentPage : 1
-    })
+      ...getAuthors,
+      searching: searchInput,
+      currentPage: 1,
+    });
     setForcePage(0);
     setUpdateData(true);
   };
-      
+
   const sortAuthors = async (e: any) => {
-    let value =  e.target.value;
+    let value = e.target.value;
     setSortValue(value);
     setGetAuthors({
-      ...getAuthors, sorting:value
-    }) 
+      ...getAuthors,
+      sorting: value,
+    });
     setUpdateData(true);
   };
   //end
-  
+
   //recebe os dados inserido nos formularios incluir ou editar livro
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -99,19 +100,20 @@ export default function Authors(){
       ...authorSelected,
       [name]: value,
     });
-    
   };
   //end
-  
+
   //Busca todos os dados com a paginação
   const pedidoGet = async () => {
-    const res = await (await axios.post(`${baseUrl}/getAuthors`,getAuthors)).data;
-    const total:number = res.totalRecords;
+    const res = await (
+      await axios.post(`${baseUrl}/getAuthors`, getAuthors)
+    ).data;
+    const total: number = res.totalRecords;
     setPageCount(res.totalPages);
-    console.log("total "+total);
+    console.log("total " + total);
 
     await axios
-      .post(`${baseUrl}/getAuthors`,getAuthors)
+      .post(`${baseUrl}/getAuthors`, getAuthors)
       .then((response) => {
         setData(response.data.items);
       })
@@ -120,24 +122,21 @@ export default function Authors(){
       });
   };
   //end
-  
 
   //Envia os dados do novo livro
   const pedidoPost = async () => {
     delete authorSelected.id;
     await axios
-      .post(baseUrl+"/create", authorSelected)
+      .post(`${baseUrl}/create`, authorSelected)
       .then((response) => {
         setData(data.concat(response.data));
-        if (response.data.success)
-        {
+        if (response.data.success) {
           Toast.Show("success", response.data.message);
           abrirFecharModalIncluir();
-        }else{
+        } else {
           Toast.Show("error", response.data.message);
         }
         setUpdateData(true);
-        
       })
       .catch((error) => {
         console.log(error);
@@ -148,7 +147,7 @@ export default function Authors(){
   //Envia os dados da edição de um livro
   const pedidoPut = async () => {
     await axios
-      .post(baseUrl + "/update" , authorSelected)
+      .post(baseUrl + "/update", authorSelected)
       .then((response) => {
         var resposta = response.data;
         var dadosAuxiliar = data;
@@ -159,24 +158,21 @@ export default function Authors(){
             nacionality: string;
             image: string;
           }) => {
-            
-            if (author.id === authorSelected.id){
-                author.name = resposta.name;
-                author.nacionality = resposta.nacionality;
-                author.image = resposta.image;                
-            }  
+            if (author.id === authorSelected.id) {
+              author.name = resposta.name;
+              author.nacionality = resposta.nacionality;
+              author.image = resposta.image;
+            }
           }
         );
 
-        if (response.data.success)
-        {Toast.Show("success", response.data.message);
-        }
-        else{
+        if (response.data.success) {
+          Toast.Show("success", response.data.message);
+        } else {
           Toast.Show("error", response.data.message);
         }
         abrirFecharModalEditar();
         setUpdateData(true);
-        
       })
       .catch((error) => {
         console.log(error);
@@ -192,10 +188,9 @@ export default function Authors(){
         setData(data.filter((author) => author !== response.data));
         setUpdateData(true);
         abrirFecharModalExcluir();
-        if(response.data.success){
+        if (response.data.success) {
           Toast.Show("success", response.data.message);
-        }
-        else{
+        } else {
           Toast.Show("error", response.data.message);
         }
       })
@@ -211,117 +206,128 @@ export default function Authors(){
       pedidoGet();
       setUpdateData(false);
     }
-  },[updateData]);
+  }, [updateData]);
   //end
 
-  const handlePageClick = async (data:any)=>{
-    let current = data.selected+1;
+  const handlePageClick = async (data: any) => {
+    let current = data.selected + 1;
     setGetAuthors({
-      ...getAuthors, currentPage:current
-    })
+      ...getAuthors,
+      currentPage: current,
+    });
     setForcePage(data.selected);
     setUpdateData(true);
-  }
+  };
   // end
-  
+
   return (
-    <div className="Book-container">
+    <div className="Author-container">
       <ToastContainer
-      position="top-center"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
       <br></br>
-      <Row >
-      <Col>
-        <button className="btn btn-success md-2" onClick={() => abrirFecharModalIncluir()}
-      >Incluir novo Autor</button>
-        <br></br>
+      <Row>
+        <Col>
+          <Button  style={{ backgroundColor:"darkgreen" }}
+            onClick={() => abrirFecharModalIncluir()}
+          >
+            Incluir novo Autor
+          </Button>
+          <br></br>
         </Col>
         <Col></Col>
-        <Col>    
-        <h5>Ordenar por:</h5>
+        <Col>
+          <h5>Ordenar por:</h5>
         </Col>
         <Col>
-          <select style={{width:"90px", borderRadius:"2px", height:"35px"}}
+          <select
+            style={{ width: "90px", borderRadius: "5px", height: "35px" }}
             onChange={sortAuthors}
-            value={sortValue}>
-              <option>Id</option>
-              {sortOptions.map((item, index) => (
-                <option value={item} key={index}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </Col>
-          <Col></Col>
-        <Col>
-        <form className="d-flex" role="search" onSubmit={searchAuthors}>
-        <input style={{width:"250px", borderRadius:"2px", height:"35px"}}
-          className="form-control me-2 bg-light"
-          type="search"
-          placeholder="Buscar"
-          aria-label="Search"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button className="btn btn-success md-2" type="submit">
-        Ok</button>
-        <button className="btn btn-danger md-2" onClick={() => searchReset()}>
-        Resetar</button>
-      </form>
+            value={sortValue}
+          >
+            <option>Id</option>
+            {sortOptions.map((item, index) => (
+              <option value={item} key={index}>
+                {item}
+              </option>
+            ))}
+          </select>
         </Col>
-        <br></br><br></br>
-        
+        <Col></Col>
+        <Col>
+          <form className="d-flex" role="search" onSubmit={searchAuthors}>
+            <input
+              style={{ width: "250px", borderRadius: "2px", height: "35px" }}
+              className="form-control me-2 bg-light"
+              type="search"
+              placeholder="Buscar"
+              aria-label="Search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <Button  style={{ backgroundColor:"blue"}} type="submit">
+              Ok
+            </Button>
+            <Button  style={{ backgroundColor:"red" }}
+              onClick={() => searchReset()}
+            >
+              Resetar
+            </Button>
+          </form>
+        </Col>
+        <br></br>
+        <br></br>
       </Row>
 
-      {
-        data.length === 0 && searchInput.length > 2 ? (
-        <Row xs={2 | 1} md={3} className="g-1" >
+      {data.length === 0 && searchInput.length > 2 ? (
+        <Row xs={2 | 1} md={3} className="g-1">
           <div className="justify-content-center">
             <h4>Autor não encontrado</h4>
           </div>
         </Row>
       ) : (
-        <Row xs={2 | 1} md={3} className="g-1">
+        <Row xs={2 | 1} md={3} className="g-3">
           {data.map(
             (author: {
               id: number;
               name: string;
               nacionality: string;
               image: string;
+              authorTitle: [];
             }) => (
-              <Col key={author.id}  width="50px">
-                <Card border="primary" bg="light">
+              <Col key={author.id} width="50px">
+                <Card border="primary" bg="light" className="text-center" style={{ width: '27rem'}}>
                   <Card.Body>
+                  <Card.Img variant="top" style={{ width: "200px", borderRadius: "5px", height: "150px" }}
+                     src={author.image}  />
                     <Card.Title>{author.name}</Card.Title>
                     <Card.Text>
-                        <br></br>
-                        <CardImg width="50%" src={author.image} alt={author.name} />
-                        <br></br>
-                        <b>País: </b>
-                        {author.nacionality}
-                        <br></br><br></br>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => selectAuthor(author, "Editar")}
-                        >
-                          Editar
-                        </button>{" "}
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => selectAuthor(author, "Excluir")}
-                        >
-                          Excluir
-                        </button>
-                      
+                      <br></br>
+                      <b>País: </b>
+                      {author.nacionality}
+                      <br></br>
+                      <b>Livros: </b>
+                      {author.authorTitle == null ? "none" : author.authorTitle.join(", ")}
+                      <br></br>
+                      <Button  style={{ backgroundColor:"blue" }}
+                        onClick={() => selectAuthor(author, "Editar")}
+                      >
+                        Editar
+                      </Button>{" "}
+                      <Button  style={{ backgroundColor:"red" }}
+                        onClick={() => selectAuthor(author, "Excluir")}
+                      >
+                        Excluir
+                      </Button>
                     </Card.Text>
                   </Card.Body>
                 </Card>
@@ -329,30 +335,28 @@ export default function Authors(){
             )
           )}
         </Row>
-      )
-      }
-      
+      )}
 
-<ReactPaginate 
-        previousLabel={'previous'}
-        nextLabel={'next'}
-        breakLabel={'...'} 
+      <ReactPaginate
+        previousLabel={"previous"}
+        nextLabel={"next"}
+        breakLabel={"..."}
         forcePage={forcePage}
         pageCount={pageCount}
         marginPagesDisplayed={2}
         pageRangeDisplayed={3}
         onPageChange={handlePageClick}
-        containerClassName={'pagination justify-content-center'}
-        pageClassName={'page-item'}
-        pageLinkClassName={'page-link'}
-        previousClassName={'page-item'}
-        previousLinkClassName={'page-link'}
-        nextClassName={'page-item'}
-        nextLinkClassName={'page-link'}
-        breakClassName={'page-item'}
-        breakLinkClassName={'page-link'}
-        activeClassName={'active'}
-  />
+        containerClassName={"pagination justify-content-center"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"}
+      />
 
       {/* Modal incluir autor */}
       <Modal isOpen={modalIncluir}>
@@ -368,7 +372,7 @@ export default function Authors(){
               onChange={handleChange}
             />
             <br />
-            <label>Nacionality: </label>
+            <label>País: </label>
             <br />
             <input
               type="text"
@@ -388,15 +392,14 @@ export default function Authors(){
           </div>
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-primary" onClick={() => pedidoPost()}>
+          <Button  style={{ backgroundColor:"blue" }} onClick={() => pedidoPost()}>
             Incluir
-          </button>{" "}
-          <button
-            className="btn btn-danger"
+          </Button>{" "}
+          <Button  style={{ backgroundColor:"red" }}
             onClick={() => abrirFecharModalIncluir()}
           >
             Cancelar
-          </button>
+          </Button>
         </ModalFooter>
       </Modal>
 
@@ -423,7 +426,7 @@ export default function Authors(){
               value={authorSelected && authorSelected.name}
             />
             <br />
-            <label>Nacionality: </label>
+            <label>País: </label>
             <br />
             <input
               type="text"
@@ -445,16 +448,15 @@ export default function Authors(){
           </div>
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-primary" onClick={() => pedidoPut()}>
+          <Button  style={{ backgroundColor:"blue" }} onClick={() => pedidoPut()}>
             Editar
-          </button>{" "}
+          </Button>{" "}
           {"   "}
-          <button
-            className="btn btn-danger"
+          <Button  style={{ backgroundColor:"red" }}
             onClick={() => abrirFecharModalEditar()}
           >
             Cancelar
-          </button>
+          </Button>
         </ModalFooter>
       </Modal>
 
@@ -464,15 +466,14 @@ export default function Authors(){
           Confirma a exclusão do autor {authorSelected && authorSelected.name} ?
         </ModalBody>
         <ModalFooter>
-          <button className="btn btn-danger" onClick={() => pedidoDelete()}>
+          <Button  style={{ backgroundColor:"red" }} onClick={() => pedidoDelete()}>
             Sim
-          </button>
-          <button
-            className="btn btn-secondary"
+          </Button>
+          <Button  style={{ backgroundColor:"blue" }}
             onClick={() => abrirFecharModalExcluir()}
           >
             Não
-          </button>
+          </Button>
         </ModalFooter>
       </Modal>
     </div>

@@ -68,9 +68,9 @@ namespace CatalogoLivros.Repositories.Books
                     case "título":
                         query = query.OrderBy(x => x.Title);
                         break;
-                    /*case "author":
-                        query = query.OrderBy(x => x.Author);
-                        break;*/
+                    case "autor":
+                        query = query.OrderBy(x => x.Author.Name);
+                        break;
                     case "preço":
                         query = query.OrderBy(x => x.Price);
                         break;

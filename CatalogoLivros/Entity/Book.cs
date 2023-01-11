@@ -20,6 +20,7 @@ namespace CatalogoLivros.Entity
         public decimal Price { get; set; }
         [DefaultValue(false)]
         public bool isDeleted { get; set; }
+        [DefaultValue("https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph")]
         public string? image { get; set; }
         
         public int AuthorId{ get; set; }
