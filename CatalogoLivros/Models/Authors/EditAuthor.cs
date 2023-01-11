@@ -14,9 +14,8 @@ namespace CatalogoLivros.Models.Authors
         public EditAuthorValidator()
         {
             RuleFor(x => x.Name).NotNull().WithMessage("Insira o nome do autor").NotEmpty().WithMessage("Favor preencher o campo Nome");
-            RuleFor(x => x.Nacionality).NotNull().WithMessage("Insira o nacionalidade").NotEmpty().WithMessage("Favor preencher o campo Nacionalidade");
-            RuleFor(x => x.Name).NotNull().WithMessage("Insira o link da imagem do autor").NotEmpty().WithMessage("Favor preencher o campo Imagem");
-
+            RuleFor(x => x.Nacionality).NotNull().WithMessage("Insira o país").NotEmpty().WithMessage("Favor preencher o campo Nacionalidade");
+            
         }
     }
 }

@@ -46,6 +46,8 @@
   tbody tr:nth-child(even) {
       background: #f8f8fd;
     }
-
+    .Author-container{
+      width: 99%;
+    }
 
   

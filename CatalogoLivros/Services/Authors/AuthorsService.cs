@@ -150,7 +150,14 @@ namespace CatalogoLivros.Services.Authors
 
             try
             {
-                
+                var responseValidate = await new CreateAuthorValidator().ValidateAsync(createAuthor);
+                if (responseValidate == null || responseValidate.IsValid == false)
+                {
+                    response.Message = responseValidate == null ? "Erro ao validar a informação para criar um livro" : responseValidate.Errors.FirstOrDefault()!.ErrorMessage;
+                    response.Success = false;
+                    return response;
+                }
+
                 var newAuthor = createAuthor.ToEntity();
                 var authorInDB = await _authorsRepository.Create(newAuthor);
                 if (authorInDB == null)
