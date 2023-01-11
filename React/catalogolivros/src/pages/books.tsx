@@ -437,7 +437,7 @@ export default function Books() {
         </ModalBody>
         <ModalFooter>
         <Button  style={{ backgroundColor:"darkgreen" }}href="/authors" >
-            Novo Autor
+            Autores
           </Button>{" "}
           <Button  style={{ backgroundColor:"blue" }} onClick={() => pedidoPost()}>
             Incluir
