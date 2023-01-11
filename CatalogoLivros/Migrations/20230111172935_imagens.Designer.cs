@@ -3,6 +3,7 @@ using CatalogoLivros.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogoLivros.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230111172935_imagens")]
+    partial class imagens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,7 +103,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896412746L,
                             Price = 16.20m,
                             Title = "Mataram a Cotovia",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -110,7 +112,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896410803L,
                             Price = 20.19m,
                             Title = "Crime e Castigo",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -120,7 +121,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789720730237L,
                             Price = 8.7m,
                             Title = "Histórias de Dom Quixote",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -130,7 +130,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789526458521L,
                             Price = 20.19m,
                             Title = "História Secreta do Mundo",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -140,7 +139,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789899033214L,
                             Price = 18.9m,
                             Title = "A Psicologia da Estupidez",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -150,7 +148,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896714536L,
                             Price = 12.00m,
                             Title = "Estar Vivo Aleija",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -160,7 +157,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896441975L,
                             Price = 24.40m,
                             Title = "Porque Falham as Nações",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -170,7 +166,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896684662L,
                             Price = 15.50m,
                             Title = "Como Morrem as democracias",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -180,7 +175,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789897244315L,
                             Price = 18.5m,
                             Title = "Os donos do mundo",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -190,7 +184,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789720726803L,
                             Price = 5.94m,
                             Title = "A Viúva e o Papagaio",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -200,7 +193,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789722524223L,
                             Price = 8.00m,
                             Title = "O alquimista",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         },
                         new
@@ -210,7 +202,6 @@ namespace CatalogoLivros.Migrations
                             Isbn = 9789896162931L,
                             Price = 7.89m,
                             Title = "A teoria de tudo",
-                            image = "https://img.freepik.com/free-psd/book-hardcover-mockup-three-views_125540-226.jpg?size=626&ext=jpg&ga=GA1.2.560839453.1661523512&semt=sph",
                             isDeleted = false
                         });
                 });
