@@ -1,4 +1,6 @@
 using CatalogoLivros.Context;
+using CatalogoLivros.Interface.Repositories;
+using CatalogoLivros.Interface.Services;
 using CatalogoLivros.Repositories.Authors;
 using CatalogoLivros.Repositories.Books;
 using CatalogoLivros.Services.Authors;

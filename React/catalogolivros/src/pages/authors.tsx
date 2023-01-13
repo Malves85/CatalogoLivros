@@ -183,7 +183,7 @@ export default function Authors() {
   //Altera a visibilidade do livro deletado, ou seja soft delete
   const pedidoDelete = async () => {
     await axios
-      .delete(baseUrl + "/" + authorSelected.id)
+      .post(baseUrl + "/Delete" , authorSelected)
       .then((response) => {
         setData(data.filter((author) => author !== response.data));
         setUpdateData(true);
