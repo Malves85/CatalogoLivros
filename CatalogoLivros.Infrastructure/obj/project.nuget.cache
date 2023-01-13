@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "S/Lm+oyrb0ExPic5XiYgEhFUPNok31e7Fln2zw2yPDFbCufWZEvGb61mjewyqsPzzZo/M1HW51S0MsliEuy8hA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\marce\\Downloads\\Samsys\\CatalogoLivros\\CatalogoLivros\\CatalogoLivros.Infrastructure\\CatalogoLivros.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marce\\.nuget\\packages\\ardalis.smartenum\\2.1.0\\ardalis.smartenum.2.1.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\ardalis.smartenum.systemtextjson\\2.1.0\\ardalis.smartenum.systemtextjson.2.1.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\fluentvalidation\\11.4.0\\fluentvalidation.11.4.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
+    "C:\\Users\\marce\\.nuget\\packages\\system.text.json\\6.0.2\\system.text.json.6.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

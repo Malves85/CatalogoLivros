@@ -1,0 +1,17 @@
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.csproj.AssemblyReference.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.AssemblyInfoInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.AssemblyInfo.cs
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.csproj.CoreCompileInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.DAL.deps.json
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.DAL.runtimeconfig.json
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.DAL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.DAL.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.Infrastructure.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\bin\Debug\net7.0\CatalogoLivros.Infrastructure.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.csproj.CopyComplete
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\refint\CatalogoLivros.DAL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\CatalogoLivros.DAL.genruntimeconfig.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.API\obj\Debug\net7.0\ref\CatalogoLivros.DAL.dll

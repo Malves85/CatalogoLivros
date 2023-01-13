@@ -1,0 +1,17 @@
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.csproj.AssemblyReference.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.AssemblyInfoInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.AssemblyInfo.cs
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.csproj.CoreCompileInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.BLL.deps.json
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.BLL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.BLL.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.DAL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.Infrastructure.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.DAL.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\bin\Debug\net7.0\CatalogoLivros.Infrastructure.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.csproj.CopyComplete
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\refint\CatalogoLivros.BLL.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\CatalogoLivros.BLL.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.BLL\obj\Debug\net7.0\ref\CatalogoLivros.BLL.dll
