@@ -1,8 +1,7 @@
 ﻿using CatalogoLivros.Helpers;
+using CatalogoLivros.Infrastructure.Models.Authors;
+using CatalogoLivros.Interface.Services;
 using CatalogoLivros.Models.Authors;
-using CatalogoLivros.Models.Books;
-using CatalogoLivros.Services.Authors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogoLivros.Controllers
@@ -38,10 +37,10 @@ namespace CatalogoLivros.Controllers
             return await _authorsService.Update(editAuthor);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<MessagingHelper> Delete(int id)
+        [HttpPost("Delete")]
+        public async Task<MessagingHelper> Delete(DeleteAuthor deleteAuthor)
         {
-            return await _authorsService.DeleteAuthor(id);
+            return await _authorsService.DeleteAuthor(deleteAuthor);
 
         }
     }

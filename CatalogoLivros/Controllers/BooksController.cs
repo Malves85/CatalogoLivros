@@ -1,7 +1,8 @@
 ﻿using CatalogoLivros.Helpers;
+using CatalogoLivros.Interface.Services;
 using CatalogoLivros.Models.Books;
-using CatalogoLivros.Services.Books;
 using Microsoft.AspNetCore.Mvc;
+using CatalogoLivros.Infrastructure.Models.Books;
 
 namespace CatalogoLivros.Controllers
 {
@@ -34,21 +35,13 @@ namespace CatalogoLivros.Controllers
             return await _bookService.Update(editBook);
         }
 
-        [HttpGet("{id}")]
-        public async Task<MessagingHelper<BookDTO>> GetById(int id)          
-        {
-            
-            return await _bookService.GetById(id);
-        }
 
-        [HttpDelete("{id:int}")]
-        public async Task<MessagingHelper> Delete(int id)
+        [HttpPost("Delete")]
+        public async Task<MessagingHelper> Delete(DeleteBook deleteBook)
         {
-            return await _bookService.DeleteBook(id);
+            return await _bookService.DeleteBook(deleteBook);
             
         }
-
-
 
     }
 }

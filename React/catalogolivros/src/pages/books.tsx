@@ -206,8 +206,8 @@ export default function Books() {
 
   //Altera a visibilidade do livro deletado, ou seja soft delete
   const pedidoDelete = async () => {
-    await axios
-      .delete(baseUrl + "/" + bookSelected.id)
+    await axios 
+      .post(baseUrl + "/Delete",bookSelected)
       .then((response) => {
         setData(data.filter((book) => book !== response.data));
         setUpdateData(true);
@@ -326,7 +326,7 @@ export default function Books() {
               isbn: number;
               title: string;
               authorName: string;
-              price: any;
+              price: string;
               image : string;
             }) => (
               <Col key={book.id}>

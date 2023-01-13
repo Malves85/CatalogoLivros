@@ -1,0 +1,12 @@
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.AssemblyInfo.cs
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\bin\Debug\net7.0\CatalogoLivros.Infrastructure.deps.json
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\bin\Debug\net7.0\CatalogoLivros.Infrastructure.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\bin\Debug\net7.0\CatalogoLivros.Infrastructure.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\refint\CatalogoLivros.Infrastructure.dll
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\CatalogoLivros.Infrastructure.pdb
+C:\Users\marce\Downloads\Samsys\CatalogoLivros\CatalogoLivros\CatalogoLivros.Infrastructure\obj\Debug\net7.0\ref\CatalogoLivros.Infrastructure.dll
