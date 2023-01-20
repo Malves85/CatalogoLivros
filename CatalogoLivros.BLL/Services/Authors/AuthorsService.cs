@@ -5,6 +5,7 @@ using CatalogoLivros.Interface.Repositories;
 using CatalogoLivros.Interface.Services;
 using CatalogoLivros.Models.Authors;
 using CatalogoLivros.Models.Books;
+using CatalogoLivros.Repositories.Books;
 
 namespace CatalogoLivros.Services.Authors
 {
@@ -126,7 +127,7 @@ namespace CatalogoLivros.Services.Authors
                 if (responseRepository.Success != true)
                 {
                     response.Success = false;
-                    response.Message = "Erro ao obter a informação do livro";
+                    response.Message = "Erro ao obter a informação do autor";
                     return response;
                 }
 
@@ -140,7 +141,7 @@ namespace CatalogoLivros.Services.Authors
             {
 
                 response.Success = false;
-                response.Message = "Ocorreu um erro ao obter os livros.";
+                response.Message = "Ocorreu um erro ao obter os autores.";
             }
 
             return response;
@@ -179,6 +180,30 @@ namespace CatalogoLivros.Services.Authors
             }
 
             return response;
+        }
+
+        public async Task<MessagingHelper<AuthorDTO>> GetById(int id)
+        {
+            MessagingHelper<AuthorDTO> result = new();
+            try
+            {
+                var responseRepository = await _authorsRepository.GetById(id);
+                if (responseRepository == null)
+                {
+                    result.Success = false;
+                    result.Message = "Não foi possivel encontrar este autor";
+                    return result;
+                }
+                var authorResponse = new AuthorDTO(responseRepository);
+                result.Obj = authorResponse;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = "Ocorreu um erro ao ir buscar o autor";
+            }
+            return result;
         }
 
     }

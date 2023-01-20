@@ -1,4 +1,5 @@
-﻿using CatalogoLivros.Context;
+﻿using Azure;
+using CatalogoLivros.Context;
 using CatalogoLivros.Helpers;
 using CatalogoLivros.Infrastructure.Models.Books;
 using CatalogoLivros.Interface.Repositories;
@@ -81,7 +82,7 @@ namespace CatalogoLivros.Services.Books
 
                 bookDB.Isbn = editBook.Isbn;
                 bookDB.Title = editBook.Title;
-                bookDB.AuthorId = editBook.AuthorId;                 
+                bookDB.AuthorId = editBook.AuthorId;
                 bookDB.Price = editBook.Price;
 
                 var bookUpDate = await _bookRepository.Update(bookDB);
@@ -122,7 +123,7 @@ namespace CatalogoLivros.Services.Books
                     return response;
                 }
 
-                
+
                 var newBook = createBook.ToEntity();
                 var assistanceInDB = await _bookRepository.Create(newBook);
                 if (assistanceInDB == null)
@@ -189,6 +190,28 @@ namespace CatalogoLivros.Services.Books
             return response;
         }
 
-
+        public async Task<MessagingHelper<BookDTO>> GetById(int id)
+        {
+            MessagingHelper<BookDTO> result = new();
+            try
+            {
+                var responseRepository = await _bookRepository.GetById(id);
+                if (responseRepository == null)
+                {
+                    result.Success = false;
+                    result.Message = "Não foi possivel encontrar este livro";
+                    return result;
+                }
+                var bookResponse = new BookDTO(responseRepository);
+                result.Obj = bookResponse;
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Message = "Ocorreu um erro ao ir buscar o livro";
+            }
+            return result;
+        }
     }
 }

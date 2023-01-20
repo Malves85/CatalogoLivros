@@ -1,0 +1,18 @@
+th {
+    text-align: left;
+    
+    font-weight: bold;
+    border: 1px solid white;
+    position: sticky;
+  }
+tbody tr:nth-child(even) {
+      background: #f8f8fd;
+    }
+#cardComponent{
+  max-width: 18rem;
+  display: flex;
+}
+.Book-container{
+  width: 99%;
+  
+}
