@@ -8,19 +8,19 @@ import { APIService } from "./APIService";
 
 export class BookService {
     async GetAll(
-        searchParameters: string,
-        sortingParameters: string,
         currentPage: number,
         pageSize: number,
+        searching: string,
+        sorting: string,
     ): Promise<PaginatedList<BookListDTO>> {
         try {
             var response = await APIService.Axios().post(
                 `${APIService.GetURL()}/Books/getAll`,
                 {
-                    searchParameters,
-                    sortingParameters,
                     currentPage,
                     pageSize,
+                    searching,
+                    sorting,
                 },
                 {
                     headers: {

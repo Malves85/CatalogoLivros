@@ -6,6 +6,7 @@ import "../../styles/AuthorCreate.css"
 import { AuthorService } from '../../services/AuthorService';
 import { AuthorDTO } from "../../models/authors/AuthorDTO";
 import { AuthorCreateDTO } from "../../models/authors/AuthorCreateDTO";
+import Input from "../../components/Input";
 
 
 export default function AuthorCreate() {
@@ -50,36 +51,11 @@ export default function AuthorCreate() {
             <br />
             <h2>Criar Autor</h2>
             <div className="form-group">
-              <label>Nome </label>
-              <br />
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                onChange={handleChange}
-                value={author && author.name}
-              />
-              <br />
-              <label>País </label>
-              <br />
-              <input
-                type="text"
-                className="form-control"
-                name="nacionality"
-                onChange={handleChange}
-                value={author && author.nacionality}
-              />
-              <br />
-              <label>Imagem </label>
-              <br />
-              <input
-                type="text"
-                className="form-control"
-                name="image"
-                onChange={handleChange}
-                value={author && author.image}
-              />
-              <br />
+            <Input
+              
+              isBook={false}
+              onChange={handleChange}
+            />
               <Button  style={{ backgroundColor:"blue" }} onClick={createAuthor}>
                         Incluir
                 </Button>{" "}
