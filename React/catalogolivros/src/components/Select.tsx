@@ -26,26 +26,22 @@ export default function Selects(props){
     return(
         <div>
             <label>Autor </label>
-                    <select
-                        style={{
-                            width: "465px",
-                            borderRadius: "5px",
-                            borderColor: "lightgray",
-                            height: "40px",
-                        }}
-                        name="authorId"
-                        onChange={props.onChange}
-                        value={props.value}>
+                
+                <select
+                    style={{width: "465px", borderRadius: "5px", borderColor: "lightgray", height: "40px",}}
+                    name="authorId"
+                    onChange={props.onChange}
+                    value={props.value}>
 
-                        <option>selecionar</option>
-                            {authors.map((author) => (
-                                <option value={author.id} key={author.id}>
-                                    {author.name}
-                                </option>
-                        ))}
+                    <option>selecionar</option>
+                    {authors.map((author) => (
+                        <option value={author.id} key={author.id}>
+                            {author.name}
+                        </option>
+                    ))}
 
-                    </select>
-                    <br /><br />
+                </select>
+                <br /><br />
         </div>
     );
 }

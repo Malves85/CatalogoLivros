@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Row } from "reactstrap";
+import Input from "../../components/Input";
 import Toast from "../../helpers/Toast";
 import { AuthorDTO } from "../../models/authors/AuthorDTO";
 import { AuthorEditDTO } from "../../models/authors/AuthorEditDTO";
@@ -86,36 +87,14 @@ export default function AuthorEdit() {
           <label>Id </label>
           <input type="number" className="form-control" readOnly value={id} />
           <br />
-          <label>Nome </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            onChange={handleChange}
-            value={author && author.name}
-          />
-          <br />
-          <label>País </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="nacionality"
-            onChange={handleChange}
-            value={author && author.nacionality}
-          />
-          <br />
-          <label>Imagem </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="image"
-            onChange={handleChange}
-            value={author && author.image}
-          />
-          <br />
+          <Input
+              
+                isBook={false}
+                onChange={handleChange}
+                name={author && author.name}
+                nacionality={author && author.nacionality}
+                image={author && author.image}
+            />
           <Button
             style={{ marginLeft: "80px", backgroundColor: "blue" }}
             onClick={updateAuthor}

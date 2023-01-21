@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Col, Row } from "reactstrap";
 import Input from "../../components/Input";
-import Select from "../../components/Select";
 import Toast from "../../helpers/Toast";
 import { BookDTO } from "../../models/books/BookDTO";
 import { BookEditDTO } from "../../models/books/BookEditDTO";
-import { AuthorService } from "../../services/AuthorService";
 import { BookService } from "../../services/BookService";
 import "../../styles/BookEdit.css";
 
@@ -15,8 +13,6 @@ export default function BookEdit() {
     const navigate = useNavigate();
     const [book, setBook] = useState<BookDTO>({} as BookDTO);
     const bookService = new BookService();
-    const [authors, setAuthors] = useState([]);
-    const authorService = new AuthorService();
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -28,7 +24,6 @@ export default function BookEdit() {
 
     useEffect(() => {
         loadBook(parseInt(id));
-        loadAuthors();
     }, [id]);
 
     const loadBook = async (id: number) => {
@@ -44,22 +39,6 @@ export default function BookEdit() {
             return;
         }
         setBook(response.obj);
-    };
-
-    const loadAuthors = async () => {
-        var response = await authorService.GetAll(1, 100,"", "Nome");
-        
-        if (response.success !== true) {
-            Toast.Show("error", "Erro ao carregar o autor!");
-            return;
-        }
-
-        if (response.items == null) {
-            Toast.Show("error", "Autor não existe!");
-            return;
-        }
-        setAuthors(response.items);
-        console.log(response.items)
     };
 
     const updateBook = async () => {
@@ -110,38 +89,16 @@ export default function BookEdit() {
           <label>Id </label>
           <input type="number" className="form-control" readOnly value={id} />
           <br />
-          <label>Isbn </label>
-          <br />
-          <input
-            type="number"
-            className="form-control"
-            name="isbn"
-            onChange={handleChange}
-            value={book && book.isbn}
-          />
-          <br />
-          <label>Título </label>
-          <br />
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            onChange={handleChange}
-            value={book && book.title}
-          />
-          <br />
-          <Select
-            value={book.authorId}
-            onChange={handleChange}
-          />
-          <label>Preço </label>
-          <input
-            type="number"
-            className="form-control"
-            name="price"
-            onChange={handleChange}
-            value={book && book.price}
-          />
+          
+          <Input
+              
+                isBook={true}
+                id={book && book.authorId}
+                onChange={handleChange}
+                isbn={book && book.isbn}
+                title={book && book.title}
+                price={book && book.price}
+            />
           <Button
             style={{ marginLeft: "80px", backgroundColor: "blue" }}
             onClick={updateBook}

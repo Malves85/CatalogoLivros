@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Col, Row } from "reactstrap";
+import { Button, Col, Row } from "reactstrap";
 import { BookService } from "../../services/BookService"
 import { BookCreateDTO } from '../../models/books/BookCreateDTO';
 import { BookDTO } from '../../models/books/BookDTO';
@@ -7,8 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import Toast from '../../helpers/Toast';
 import "../../styles/BookCreate.css"
 import Input from "../../components/Input";
-import Select from "../../components/Select";
-import Button from "../../components/Button";
 
 export default function BookCreate() {
     const [book, setBook] = useState<BookDTO>({} as BookDTO);
@@ -56,31 +54,17 @@ export default function BookCreate() {
                 <div className="form-group" >
 
                     <Input
+                    isBook={true}
                     onChange={handleChange}
                     />
 
-                    <Col>
-                    <Button
-                        style={{ backgroundColor: "red" }}
-                        onClick={createBook}
-                        label="Incluir"
-                    />
-
-                    <Button
-                        style={{ backgroundColor: "red" }}
-                        onClick={goBack}
-                        label="Voltar"
-                    />
-                    
-                    </Col>
-                    
-                    {/*<Button  style={{ backgroundColor:"blue" }} onClick={createBook}>
+                    <Button  style={{ backgroundColor:"blue" }} onClick={createBook}>
                         Incluir
                     </Button>{" "}
 
                     <Button style={{ backgroundColor:"red" }} onClick={goBack}>
                         Voltar
-                    </Button>*/}
+                    </Button>
 
                 </div>
             </Col>

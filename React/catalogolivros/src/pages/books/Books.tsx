@@ -1,6 +1,5 @@
 import "../../styles/Books.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Card} from "reactstrap";
 import CardBody  from "../../components/Card"
@@ -8,12 +7,11 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ReactPaginate from "react-paginate";
 import "react-toastify/dist/ReactToastify.css";
-import Toast from "../../helpers/Toast";
 import { useNavigate } from "react-router-dom";
+import Toast from "../../helpers/Toast";
+import { BookService } from "../../services/BookService";
 
 export default function Books() {
-  const baseUrl = "https://localhost:7043/api/Books";
-  const [data, setData] = useState([]);
   const [updateData, setUpdateData] = useState(true);
   const [searchInput, setSearchInput] = useState("");
   const [pageCount, setPageCount] = useState(1);
@@ -21,37 +19,21 @@ export default function Books() {
   const sortOptions = ["Autor", "Isbn", "Preço", "Título"];
   const [forcePage, setForcePage] = useState(0);
   const navigate = useNavigate();
-  const [authorsData, setAuthorsData] = useState([])
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(6);
 
-  const [bookSelected, setbookSelected] = useState({
-    id: "",
-    isbn: 0,
-    title: "",
-    authorId: 0,
-    price: 0,
-  });
-  
-
-  const [getBooks, setGetBooks] = useState({
-    currentPage: 1,
-    pageSize: 6,
-    searching: "",
-    sorting: "",
-  });
-
-  const selectBook = (book: any) => {
-    setbookSelected(book);
-    
-  };
 
   //Filtro
 
-  const searchReset = async () => {
-    setSearchInput("");
-    setGetBooks({
-      ...getBooks,
-    });
-  };
+  /*const searchReset = async () => {
+        setSearchInput("");
+        setGetBooks({
+            ...getBooks, searching:"",
+            currentPage : 1
+        })
+        setForcePage(0);
+        setUpdateData(true);
+    };
 
   const searchBooks = async (e: any) => {
     e.preventDefault();
@@ -92,44 +74,42 @@ export default function Books() {
         console.log(error);
       });
   };
-  //end
-
-  //Altera a visibilidade do livro deletado, ou seja soft delete
-  const pedidoDelete = async () => {
-    await axios 
-      .post(baseUrl + "/Delete",bookSelected)
-      .then((response) => {
-        setData(data.filter((book) => book !== response.data));
-        setUpdateData(true);
-        if (response.data.success) {
-          Toast.Show("success", response.data.message);
-        } else {
-          Toast.Show("error", response.data.message);
+  //end*/
+    const [books, setBooks] = useState([]);
+    const bookService = new BookService();
+    
+    const loadBooks = async () => {
+        var response = await bookService.GetAll(currentPage, pageSize, searchInput, sortValue);
+        
+        if (response.success !== true) {
+            Toast.Show("error", "Erro ao carregar os livros!");
+            return;
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  //end
+
+        if (response.items == null) {
+            Toast.Show("error", "Não existem livros!");
+            return;
+        }
+        setBooks(response.items);
+        setPageCount(response.totalPages);
+        setUpdateData(true);
+    };
+
 
   //Atualiza os dados da pagina
   useEffect(() => {
     if (updateData) {
-      pedidoGet();
-      setUpdateData(false);
+        loadBooks();
+        setUpdateData(false);
     }
   }, [updateData]);
   //end
 
   const handlePageClick = async (data: any) => {
     let current = data.selected + 1;
-    setGetBooks({
-      ...getBooks,
-      currentPage: current,
-    });
+    setCurrentPage(current);
     setForcePage(data.selected);
-    setUpdateData(true);
+    
   };
   // end
 
@@ -150,46 +130,37 @@ export default function Books() {
           <h5>Ordenar por:</h5>
         </Col>
         <Col>
-          <select
-            style={{ width: "120px", borderRadius: "4px", height: "35px" }}
-            onChange={sortBooks}
-            value={sortValue}
-          >
-            <option>Id</option>
-            {sortOptions.map((item, index) => (
-              <option value={item} key={index}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col></Col>
-        <Col>
-          <form className="d-flex" role="search" onSubmit={searchBooks}>
-            <input
-              style={{ width: "250px", borderRadius: "2px", height: "35px" }}
-              className="form-control me-2 bg-light"
-              type="search"
-              placeholder="Buscar"
-              aria-label="Search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <Button  style={{ backgroundColor:"blue" }}type="submit">
-              Ok
-            </Button>
-            <Button  style={{ backgroundColor:"red" }}
-              onClick={() => searchReset()}
-            >
-              Resetar
-            </Button>
+        <select
+                        style={{ width: "90px", borderRadius: "5px", height: "35px" }}
+                        onChange={(e) => (setSortValue(e.target.value),setCurrentPage(0),setForcePage(0))}
+                        value={sortValue}>
+                        <option>Id</option>
+                        {sortOptions.map((item, index) => (
+                            <option value={item} key={index}>
+                                {item}
+                            </option>
+                        ))}
+                    </select>
+                </Col>
+                <Col></Col>
+                <Col>
+                <form className="d-flex" role="search" >
+                    <input
+                        style={{ width: "250px", borderRadius: "2px", height: "35px" }}
+                        className="form-control me-2 bg-light"
+                        type="search"
+                        placeholder="Buscar"
+                        aria-label="Search"
+                        value={searchInput}
+                        onChange={(e) => (setSearchInput(e.target.value),setCurrentPage(0),setForcePage(0))}
+                    />
           </form>
         </Col>
         <br></br>
         <br></br>
       </Row>
 
-      {data.length === 0 && searchInput.length > 2 ? (
+      {books.length === 0 && searchInput.length > 2 ? (
         <Row xs={2 | 1} md={3} className="g-1">
           <div className="justify-content-center">
             <h4>Livro não encontrado</h4>
@@ -197,7 +168,7 @@ export default function Books() {
         </Row>
       ) : (
         <Row xs={2 | 1} md={3} className="g-3">
-          {data.map(
+          {books.map(
             (book: {
               id: number;
               isbn: number;
