@@ -1,48 +1,35 @@
-import Main from "./Main";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/home/Home";
+import Books from "./pages/books/Books";
+import Authors from "./pages/authors/Authors";
+import Navbar from "./components/Navbar";
+import BookCreate from "./pages/books/BookCreate";
+import { toast, ToastContainer } from "react-toastify";
+import BookEdit from "./pages/books/BookEdit";
+import BookIndex from "./pages/books/BookIndex";
+import AuthorEdit from "./pages/authors/AuthorEdit";
+import AuthorCreate from "./pages/authors/AuthorCreate ";
+import AuthorIndex from "./pages/authors/AuthorIndex";
 
 export default function App() {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg bg-primary">
-        <div className="container-fluid">
-          <a className="navbar-brand">
-            Catálogo de Livros
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/">
-                  Inicio
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/books">
-                  Livros
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/authors">
-                  Autores
-                </a>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-      </nav>
-      <Main />
+      <Navbar/>
+      <Routes>
+        {/* Books  */}
+        <Route path='/' element={<Home/>} />
+        <Route path='/books' element={<Books/>} />
+        <Route path='/bookIndex' element={<BookIndex/>} />
+        <Route path='/createBook' element={<BookCreate/>} />
+        <Route path='/editBook/:id' element={<BookEdit/>} />
+        {/* Authors */}
+        <Route path='/authors' element={<Authors/>} />
+        <Route path='/editAuthor/:id' element={<AuthorEdit/>} />
+        <Route path='/createAuthor' element={<AuthorCreate/>} />
+        <Route path='/authorIndex' element={<AuthorIndex/>} />
+      </Routes>
+      <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={3000} />
     </div>
   );
 }

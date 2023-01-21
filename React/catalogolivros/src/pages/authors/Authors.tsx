@@ -1,15 +1,22 @@
-import "./authors.css";
+import "../../styles/Authors.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Card from "react-bootstrap/Card";
+import {
+  Button,
+  Card,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ReactPaginate from "react-paginate";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Toast from "../Helpers/toast";
+import Toast from "../../helpers/Toast";
+import CardBody from "../../components/Card";
+import { useNavigate } from "react-router-dom";
 
 export default function Authors() {
   const baseUrl = "https://localhost:7043/api/Authors";
@@ -26,6 +33,7 @@ export default function Authors() {
   const [sortValue, setSortValue] = useState("");
   const sortOptions = ["Nome", "País"];
   const [forcePage, setForcePage] = useState(0);
+  const navigate = useNavigate();
 
   const [authorSelected, setAuthorSelected] = useState({
     id: "",
@@ -183,7 +191,7 @@ export default function Authors() {
   //Altera a visibilidade do livro deletado, ou seja soft delete
   const pedidoDelete = async () => {
     await axios
-      .post(baseUrl + "/Delete" , authorSelected)
+      .post(baseUrl + "/Delete", authorSelected)
       .then((response) => {
         setData(data.filter((author) => author !== response.data));
         setUpdateData(true);
@@ -222,27 +230,14 @@ export default function Authors() {
 
   return (
     <div className="Author-container">
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <br></br>
       <Row>
         <Col>
-          <Button  style={{ backgroundColor:"darkgreen" }}
-            onClick={() => abrirFecharModalIncluir()}
-          >
-            Incluir novo Autor
-          </Button>
-          <br></br>
+            <Button style={{ backgroundColor:"darkgreen" }} 
+                onClick={() =>  navigate(`/createAuthor`)}>
+                Incluir novo autor
+            </Button>
+            <br></br>
         </Col>
         <Col></Col>
         <Col>
@@ -274,10 +269,11 @@ export default function Authors() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
-            <Button  style={{ backgroundColor:"blue"}} type="submit">
+            <Button style={{ backgroundColor: "blue" }} type="submit">
               Ok
             </Button>
-            <Button  style={{ backgroundColor:"red" }}
+            <Button
+              style={{ backgroundColor: "red" }}
               onClick={() => searchReset()}
             >
               Resetar
@@ -305,38 +301,44 @@ export default function Authors() {
               authorTitle: [];
             }) => (
               <Col key={author.id} width="50px">
-                <Card border="primary" bg="light" className="text-center" style={{ width: '27rem'}}>
-                  <Card.Body>
-                  <Card.Img variant="top" style={{ width: "200px", borderRadius: "5px", height: "150px" }}
-                     src={author.image}  />
-                    <Card.Title>{author.name}</Card.Title>
-                    <Card.Text>
-                      <br></br>
-                      <b>País: </b>
-                      {author.nacionality}
-                      <br></br>
-                      <b>Livros: </b>
-                      {author.authorTitle == null ? "none" : author.authorTitle.join(", ")}
-                      <br></br>
-                      <Button  style={{ backgroundColor:"blue" }}
-                        onClick={() => selectAuthor(author, "Editar")}
-                      >
-                        Editar
-                      </Button>{" "}
-                      <Button  style={{ backgroundColor:"red" }}
-                        onClick={() => selectAuthor(author, "Excluir")}
-                      >
-                        Excluir
-                      </Button>
-                    </Card.Text>
-                  </Card.Body>
+                <Card
+                  border="primary"
+                  bg="light"
+                  className="text-center"
+                  style={{ width: "27rem" }}
+                >
+                  <CardBody
+                  isBook={false}
+                    name={author.name}
+                    nacionality={author.nacionality}
+                    image={author.image}
+                    authorTitle={
+                      author.authorTitle == null
+                        ? "none"
+                        : author.authorTitle.join(", ")
+                    }
+                  />
+                  
+                  <Row>
+                    <Col/>
+                        <Button
+                            style={{ width: "100px", height: "35px", backgroundColor: "blue" }}
+                            onClick={() => ( navigate(`/editAuthor/${author.id}`))}
+                        >
+                            Detalhes
+                        </Button>
+                        <br /><br />
+                    <Col/>
+                  </Row>
+                  
+                  
                 </Card>
               </Col>
             )
           )}
         </Row>
       )}
-
+      <br/>
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}
@@ -392,10 +394,14 @@ export default function Authors() {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button  style={{ backgroundColor:"blue" }} onClick={() => pedidoPost()}>
+          <Button
+            style={{ backgroundColor: "blue" }}
+            onClick={() => pedidoPost()}
+          >
             Incluir
           </Button>{" "}
-          <Button  style={{ backgroundColor:"red" }}
+          <Button
+            style={{ backgroundColor: "red" }}
             onClick={() => abrirFecharModalIncluir()}
           >
             Cancelar
@@ -448,11 +454,15 @@ export default function Authors() {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button  style={{ backgroundColor:"blue" }} onClick={() => pedidoPut()}>
+          <Button
+            style={{ backgroundColor: "blue" }}
+            onClick={() => pedidoPut()}
+          >
             Editar
           </Button>{" "}
           {"   "}
-          <Button  style={{ backgroundColor:"red" }}
+          <Button
+            style={{ backgroundColor: "red" }}
             onClick={() => abrirFecharModalEditar()}
           >
             Cancelar
@@ -466,10 +476,14 @@ export default function Authors() {
           Confirma a exclusão do autor {authorSelected && authorSelected.name} ?
         </ModalBody>
         <ModalFooter>
-          <Button  style={{ backgroundColor:"red" }} onClick={() => pedidoDelete()}>
+          <Button
+            style={{ backgroundColor: "red" }}
+            onClick={() => pedidoDelete()}
+          >
             Sim
           </Button>
-          <Button  style={{ backgroundColor:"blue" }}
+          <Button
+            style={{ backgroundColor: "blue" }}
             onClick={() => abrirFecharModalExcluir()}
           >
             Não

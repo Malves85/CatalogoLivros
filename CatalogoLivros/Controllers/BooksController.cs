@@ -3,6 +3,8 @@ using CatalogoLivros.Interface.Services;
 using CatalogoLivros.Models.Books;
 using Microsoft.AspNetCore.Mvc;
 using CatalogoLivros.Infrastructure.Models.Books;
+using CatalogoLivros.Interface.Repositories;
+using System.Security.Claims;
 
 namespace CatalogoLivros.Controllers
 {
@@ -17,7 +19,7 @@ namespace CatalogoLivros.Controllers
             _bookService = bookService;
         }
 
-        [HttpPost("getAll")]
+        [HttpPost("getAll")]             
         public async Task<PaginatedList<ListBook>> GetAll(Search search)
         {
             return await _bookService.GetAll(search);
@@ -35,8 +37,15 @@ namespace CatalogoLivros.Controllers
             return await _bookService.Update(editBook);
         }
 
+        [HttpGet("{id}")]
+        
+        public async Task<MessagingHelper<BookDTO>> GetById(int id)
+        {
 
-        [HttpPost("Delete")]
+            return await _bookService.GetById(id);
+        }
+
+        [HttpPost("delete")]
         public async Task<MessagingHelper> Delete(DeleteBook deleteBook)
         {
             return await _bookService.DeleteBook(deleteBook);
