@@ -1,11 +1,10 @@
+import { Route } from "react-router-dom";
+
 export default function Navbar() {
     return (
       <div>
         <nav className="navbar navbar-expand-lg bg-primary">
           <div className="container-fluid">
-            <a className="navbar-brand">
-              Catálogo de Livros
-            </a>
             <button
               className="navbar-toggler"
               type="button"
@@ -35,7 +34,6 @@ export default function Navbar() {
                   </a>
                 </li>
               </ul>
-  
             </div>
           </div>
         </nav>

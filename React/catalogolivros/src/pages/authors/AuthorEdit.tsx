@@ -4,7 +4,7 @@ import { Button, Col, Row } from "reactstrap";
 import Input from "../../components/Input";
 import Toast from "../../helpers/Toast";
 import { AuthorDTO } from "../../models/authors/AuthorDTO";
-import { AuthorEditDTO } from "../../models/authors/AuthorEditDTO";
+import { AuthorEditDTO, EditAuthorDTOSchema } from "../../models/authors/AuthorEditDTO";
 import { AuthorService } from "../../services/AuthorService";
 import "../../styles/AuthorEdit.css";
 
@@ -42,6 +42,15 @@ export default function AuthorEdit() {
     };
 
     const updateAuthor = async () => {
+      var responseValidate = EditAuthorDTOSchema.validate(author,{
+        allowUnknown:true,
+    })
+    console.log()
+    if(responseValidate.error != null){
+        var message = responseValidate.error!.message;
+        Toast.Show("error",message);
+        return
+      }
         const updatedAuthor: AuthorEditDTO = {
             id: parseInt(id),
             name : author.name,

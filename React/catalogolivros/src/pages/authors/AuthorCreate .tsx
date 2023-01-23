@@ -1,16 +1,14 @@
 import { useState } from "react";
 import { Button, Col, Row } from "reactstrap";
-import Toast from '../../helpers/Toast';
-import { useNavigate } from 'react-router-dom';
-import "../../styles/AuthorCreate.css"
 import { AuthorService } from '../../services/AuthorService';
-import { AuthorDTO } from "../../models/authors/AuthorDTO";
-import { AuthorCreateDTO } from "../../models/authors/AuthorCreateDTO";
+import { AuthorCreateDTO, CreateAuthorDTOSchema } from "../../models/authors/AuthorCreateDTO";
+import { useNavigate } from 'react-router-dom';
+import Toast from '../../helpers/Toast';
+import "../../styles/AuthorCreate.css"
 import Input from "../../components/Input";
 
-
 export default function AuthorCreate() {
-    const [author, setAuthor] = useState<AuthorDTO>({} as AuthorDTO);
+    const [author, setAuthor] = useState<AuthorCreateDTO>(new AuthorCreateDTO);
     const navigate = useNavigate();
     const authorService = new AuthorService();
     const goBack = () => {navigate(-1)};
@@ -24,24 +22,27 @@ export default function AuthorCreate() {
     };
 
     const createAuthor = async()  => {
-        const createAuthor : AuthorCreateDTO = {
-            id: author.id,
-            name: author.name,
-            nacionality: author.nacionality,
-            image: author.image,
+      var responseValidate = CreateAuthorDTOSchema.validate(author,{
+          allowUnknown:true,   
+      })
+      console.log(responseValidate)
+      if(responseValidate.error != null){
+          var message = responseValidate.error!.message;
+          Toast.Show("error",message);
+          return
         }
-    
-        const response = await authorService.Create(createAuthor);
+      
+          const response = await authorService.Create(author);
 
-        if (response.success !== true) {
-            Toast.Show("error", response.message);
-            return;
-        }
+          if (response.success !== true) {
+              Toast.Show("error", response.message);
+              return;
+          }
 
-        Toast.Show("success", response.message);
-        goBack();
+          Toast.Show("success", response.message);
+          goBack();
 
-    }
+  }
 
     return (
         <Row className="newAuthorContainer">
