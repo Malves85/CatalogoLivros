@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { GenericNotEmptySchema } from "../../helpers/JoiValidations";
 
 export class AuthorEditDTO {
     id: number = 0;
@@ -9,6 +8,6 @@ export class AuthorEditDTO {
 }
 
 export const EditAuthorDTOSchema = Joi.object({
-    name: GenericNotEmptySchema("Nome do autor"),
-    nacionality: GenericNotEmptySchema("País do autor"),
-    });
+    name: Joi.string().messages({"string.empty": "Nome do autor deve ser preenchido" }),
+    nacionality: Joi.string().messages({"string.empty": "País deve ser preenchido" })
+});

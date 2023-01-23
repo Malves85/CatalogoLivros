@@ -10,6 +10,8 @@ import CardBody from "../../components/Card";
 import { useNavigate } from "react-router-dom";
 import { AuthorService } from "../../services/AuthorService";
 import Toast from "../../helpers/Toast";
+import Search from "../../components/Search";
+import OrderBy from "../../components/OrderBy";
 
 export default function Authors() {
     const [updateData, setUpdateData] = useState(true);
@@ -24,59 +26,6 @@ export default function Authors() {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(6);
-
-    /*//Filtro
-    const searchReset = async () => {
-        setSearchInput("");
-        setGetAuthors({
-            ...getAuthors, searching:"", currentPage : 1
-        })
-        setForcePage(0);
-        setUpdateData(true);
-    };
-
-    const searchAuthors = async (e: any) => {
-        e.preventDefault();
-        setGetAuthors({
-            ...getAuthors, searching: searchInput, currentPage: 1,
-        });
-        setForcePage(0);
-        setUpdateData(true);
-  };
-
-    const sortAuthors = async (e: any) => {
-        let value = e.target.value;
-        setSortValue(value);
-        setGetAuthors({
-            ...getAuthors, sorting: value,
-        });
-        setUpdateData(true);
-    };*/
-    //end
-
-    //Busca todos os dados com a paginação
-    /*const pedidoGet = async () => {
-
-        const res = await (
-            await axios.post(`${baseUrl}/getAuthors`, getAuthors)
-        ).data;
-
-        const total: number = res.totalRecords;
-
-        setPageCount(res.totalPages);
-
-        console.log("total " + total);
-
-        await axios
-        .post(`${baseUrl}/getAuthors`, getAuthors)
-        .then((response) => {
-            setData(response.data.items);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    };
-    */
 
     const [authors, setAuthors] = useState([]);
     const authorService = new AuthorService();
@@ -131,39 +80,18 @@ export default function Authors() {
                     <h5>Ordenar por:</h5>
                 </Col>
                 <Col>
-                    <select
-                        style={{ width: "90px", borderRadius: "5px", height: "35px" }}
+                    <OrderBy
                         onChange={(e) => (setSortValue(e.target.value),setCurrentPage(0),setForcePage(0))}
-                        value={sortValue}>
-                        <option>Id</option>
-                        {sortOptions.map((item, index) => (
-                            <option value={item} key={index}>
-                                {item}
-                            </option>
-                        ))}
-                    </select>
+                        value={sortValue}
+                        map={sortOptions.map((item, index) => (<option value={item} key={index}> {item} </option>))}
+                    />
                 </Col>
                 <Col></Col>
                 <Col>
-                <form className="d-flex" role="search" >
-                    <input
-                        style={{ width: "250px", borderRadius: "2px", height: "35px" }}
-                        className="form-control me-2 bg-light"
-                        type="search"
-                        placeholder="Buscar"
-                        aria-label="Search"
-                        value={searchInput}
-                        onChange={(e) => (setSearchInput(e.target.value),setCurrentPage(0),setForcePage(0))}
-                    />
-                    {/*<Button style={{ backgroundColor: "blue" }} type="submit">
-                        Ok
-                    </Button>
-                    <Button
-                        style={{ backgroundColor: "red" }}
-                        onClick={() => searchReset()}>
-                        Resetar
-                    </Button>*/}
-                </form>
+                <Search
+                value={searchInput}
+                onChange={(e) => (setSearchInput(e.target.value),setCurrentPage(0),setForcePage(0))}
+                />
                 </Col>
                 <br></br>
                 <br></br>
@@ -235,7 +163,6 @@ export default function Authors() {
                 breakLinkClassName={"page-link"}
                 activeClassName={"active"}
             />
-
         </div>
     );
 }

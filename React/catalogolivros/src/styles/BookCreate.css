@@ -1,4 +1,9 @@
 .newBookContainer{
+    padding-top: 20px;
     width: 99%;
     text-align: center;
+}
+.border{
+    border-radius: 10px;
+    background-color: aliceblue;
 }

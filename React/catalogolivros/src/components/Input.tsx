@@ -18,7 +18,7 @@ export default function Input(props){
                         value={props.isbn}
                     />
                     <br />
-                    <label>Título: </label>
+                    <label>Título </label>
                     <br />
                     <input
                         type="text"
@@ -34,7 +34,7 @@ export default function Input(props){
                         onChange={props.onChange}
                     />
                     
-                    <label>Preço: </label>
+                    <label>Preço </label>
                     <input
                         type="number"
                         className="form-control"
@@ -47,7 +47,6 @@ export default function Input(props){
 
             ):(
                 <div className="form-group">
-                    <br />
                     <label>Nome </label>
                     <br />
                     <input
@@ -68,7 +67,7 @@ export default function Input(props){
                         value={props.nacionality}
                     />
                     <br />
-                    <label>Imagem </label>
+                    <label>Imagem (opcional) </label>
                     <br />
                     <input
                         type="text"
