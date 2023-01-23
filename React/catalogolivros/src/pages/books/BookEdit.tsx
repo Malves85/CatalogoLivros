@@ -4,7 +4,7 @@ import { Button, Col, Row } from "reactstrap";
 import Input from "../../components/Input";
 import Toast from "../../helpers/Toast";
 import { BookDTO } from "../../models/books/BookDTO";
-import { BookEditDTO } from "../../models/books/BookEditDTO";
+import { BookEditDTO, EditBookDTOSchema } from "../../models/books/BookEditDTO";
 import { BookService } from "../../services/BookService";
 import "../../styles/BookEdit.css";
 
@@ -42,7 +42,17 @@ export default function BookEdit() {
     };
 
     const updateBook = async () => {
+      var responseValidate = EditBookDTOSchema.validate(book,{
+        allowUnknown:true,
+    })
+    console.log("autor "+book.authorId)
+    if(responseValidate.error != null){
+        var message = responseValidate.error!.message;
+        Toast.Show("error",message);
+        return
+      }
         const updatedBook: BookEditDTO = {
+          
             id: parseInt(id),
             isbn: book.isbn,
             title: book.title,
@@ -84,7 +94,7 @@ export default function BookEdit() {
 
       <Col className="border">
         <br />
-        <h2>Detalhes</h2>
+        <h3>Detalhes</h3>
         <div className="form-group">
           <label>Id </label>
           <input type="number" className="form-control" readOnly value={id} />
