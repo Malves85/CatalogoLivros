@@ -23,7 +23,6 @@ namespace CatalogoLivros.Models.Books
             Price = book.Price;
             isDeleted = book.isDeleted;
             image = book.image;
-
         }
     }
 
