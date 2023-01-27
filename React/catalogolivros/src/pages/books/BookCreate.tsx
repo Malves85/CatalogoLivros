@@ -8,7 +8,7 @@ import "../../styles/BookCreate.css"
 import Input from "../../components/Input";
 
 export default function BookCreate() {
-    const [book, setBook] = useState<BookCreateDTO>(new BookCreateDTO);
+    const [book, setBook] = useState<BookCreateDTO>(new BookCreateDTO());
     const navigate = useNavigate();
     const bookService = new BookService();
     const goBack = () => {navigate(-1)};

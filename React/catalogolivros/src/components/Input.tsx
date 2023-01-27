@@ -5,7 +5,7 @@ export default function Input(props){
 
     return(
         <div>
-            {props.isBook == true ? (
+            {props.isBook === true ? (
                 <div className="form-group">
 
                     <label>Isbn </label>
