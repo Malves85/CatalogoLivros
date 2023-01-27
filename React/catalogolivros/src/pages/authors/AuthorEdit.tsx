@@ -23,10 +23,10 @@ export default function AuthorEdit() {
     };
 
     useEffect(() => {
-        loadAuthors(parseInt(id));
+        loadAuthor(parseInt(id));
     }, [id]);
 
-    const loadAuthors = async (id: number) => {
+    const loadAuthor = async (id: number) => {
         var response = await authorService.GetById(id);
 
         if (response.success !== true) {
