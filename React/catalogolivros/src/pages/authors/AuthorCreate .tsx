@@ -8,7 +8,7 @@ import "../../styles/AuthorCreate.css"
 import Input from "../../components/Input";
 
 export default function AuthorCreate() {
-    const [author, setAuthor] = useState<AuthorCreateDTO>(new AuthorCreateDTO);
+    const [author, setAuthor] = useState<AuthorCreateDTO>(new AuthorCreateDTO());
     const navigate = useNavigate();
     const authorService = new AuthorService();
     const goBack = () => {navigate(-1)};
